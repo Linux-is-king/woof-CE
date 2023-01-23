@@ -5,7 +5,7 @@ download() {
 build() {
     tar -xJf fluxbox-1.3.7.tar.xz
     cd fluxbox-1.3.7
-    CC=c89 CFLAGS=-O2 LIBS=-lposix ./configure --prefix=/usr --sysconfdir=/etc
+    CC=c++11 CFLAGS=-O2 LIBS=-lposix ./configure --prefix=/usr --sysconfdir=/etc
     make
     make install
 }
