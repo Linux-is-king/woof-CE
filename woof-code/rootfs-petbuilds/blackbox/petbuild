@@ -3,7 +3,6 @@ download() {
 }
 
 build() {
-    cd blackbox
     ./autogen.sh
     ./configure --prefix=/usr --sysconfdir=/etc
     make install
