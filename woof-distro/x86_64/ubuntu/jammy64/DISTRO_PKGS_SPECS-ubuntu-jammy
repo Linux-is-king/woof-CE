@@ -271,7 +271,7 @@ yes|krb5|libkrb5-3,libkrb5support0,libk5crypto3,libgssapi-krb5-2|exe,dev,doc,nls
 no|lame|lame,libmp3lame0,libmp3lame-dev|exe,dev,doc,nls
 no|lcms|liblcms2-2,liblcms2-dev,liblcms2-utils|exe,dev,doc,nls
 no|lcms2|liblcms2-2,liblcms2-dev,liblcms2-utils|exe,dev,doc,nls
-yes|leafpad|leafpad|exe,dev>null,doc,nls #jma-y
+no|leafpad|leafpad|exe,dev>null,doc,nls #jma-y
 yes|less|less|exe,dev>null,doc,nls||deps:yes
 no|libaacs|libaacs0,libaacs-dev|exe,dev,doc,nls #mplayer needs this.
 no|libao|libao4,libao-common,libao-dev|exe,dev,doc,nls||deps:yes
