@@ -1,8 +1,17 @@
 download() {
     [ -f blackbox] || wget -t 3 -T 60  git clone https://github.com/bbidulock/blackboxwm.git blackbox
-}
+ls
+blackbox=$1
+while [ ! –e ${blackbox} ]
+do
+  sleep 1
+done
 
+echo “${blackbox} has been created”
+}
+ls
 build() {
+    cd blackbox
     ./autogen.sh
     ./configure --prefix=/usr --sysconfdir=/etc
     make install
