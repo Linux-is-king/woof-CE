@@ -142,7 +142,6 @@ no|firmware_linux_module_b43||exe| #120919 have taken these out of woof, now pet
 no|firmware_linux_module_b43legacy||exe
 yes|flac|libflac8|exe,dev,doc,nls||deps:yes
 yes|flex|flex|exe>dev,dev,doc,nls||deps:yes
-Yes|fluxbox|fluxbox|exe,dev,doc,nls||deps:yes
 no|foomatic-db-engine|foomatic-db-engine|exe,dev,doc,nls
 no|foomatic-filters|foomatic-filters|exe,dev,doc,nls
 yes|fonts-liberation2|fonts-liberation2|exe,dev,doc,nls||deps:yes
