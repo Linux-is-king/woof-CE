@@ -6,7 +6,7 @@ on:
       - testing
     inputs:
       name:
-        description: 'Human-readable name'
+        description: 'Puppy GCE'
         required: true
         default: 'JammyPup64 CE'
       version:
