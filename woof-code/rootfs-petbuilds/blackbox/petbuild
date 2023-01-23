@@ -1,0 +1,11 @@
+download() {
+    [ -f blackbox] || wget -t 3 -T 60  git clone https://github.com/bbidulock/blackboxwm.git blackbox
+}
+
+build() {
+    cd blackbox
+    ./autogen.sh
+    ./configure --prefix=/usr --sysconfdir=/etc
+    make install
+}
+
