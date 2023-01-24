@@ -1,8 +1,10 @@
 download() {
-    [ -f acl-2.3.1.tar.xz ] || wget -t 3 -T 60 https://www.alsa-project.org/files/pub/lib/alsa-lib-1.2.7.2.tar.bz2
+    [ -f alsa-lib-1.2.7.2.tar.bz2 ] || wget -t 3 -T 60 https://www.alsa-project.org/files/pub/lib/alsa-lib-1.2.7.2.tar.bz2
 }
 
 build() {
+tar -xvf alsa-lib-1.2.7.2.tar.bz2
+cd alsa-lib-1.2.7.2
 ./configure &&
 make
 make install
