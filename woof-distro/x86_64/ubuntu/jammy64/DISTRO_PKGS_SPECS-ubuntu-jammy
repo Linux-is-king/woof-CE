@@ -31,20 +31,20 @@ PKGS_SPECS_TABLE='
 yes|abiword-deps|libboost-dev,libwv-dev|exe,dev,doc,nls||deps:yes
 no|a52dec|liba52-0.7.4,liba52-0.7.4-dev|exe,dev,doc,nls
 no|aalib|libaa1|exe,dev>null,doc,nls #ascii library, needed by mplayer, gphoto
-yes|acl|libacl1|exe,dev,doc,nls||deps:yes
+#yes|acl|libacl1|exe,dev,doc,nls||deps:yes
 no|acpi|acpi|exe,dev,doc,nls
 no|acpid-busibox||exe
 yes|adduser|adduser|exe,dev,doc,nls
 no|advancecomp|advancecomp|exe>dev,dev,doc,nls
-no|alsaequal|libasound2-plugin-equal,caps|exe,dev,doc,nls| #needed by pequalizer.
-yes|alsa-lib|libasound2,libasound2-data,libasound2-dev,alsa-topology-conf,alsa-ucm-conf|exe,dev,doc,nls||deps:yes
-yes|libasound2-plugins-pulseonly|libasound2-plugins|exe,dev,doc,nls
-yes|alsa-utils|alsa-utils|exe,dev,doc,nls||deps:yes
+no|alsaequal|libasound2-plugin-equal,caps|exe,dev,doc,nls| #needed by pequalizer. pet added
+#yes|alsa-lib|libasound2,libasound2-data,libasound2-dev,alsa-topology-conf,alsa-ucm-conf|exe,dev,doc,nls||deps:yes pet added
+#yes|libasound2-plugins-pulseonly|libasound2-plugins|exe,dev,doc,nls pet added
+#yes|alsa-utils|alsa-utils|exe,dev,doc,nls||deps:yes pet added
 no|apulse||exe,dev,doc
 no|aspell|libaspell15,libaspell-dev|exe,dev,doc,nls #needed by abiword.
-yes|atk|libatk1.0-0,libatk1.0-dev|exe,dev,doc,nls||deps:yes
-yes|at-spi2-atk|libatspi2.0-0,libatk-bridge2.0-0,libatk-bridge2.0-dev,libatspi2.0-dev|exe,dev,doc,nls||deps:yes #needed by gtk+3.
-yes|attr|libattr1|exe,dev,doc,nls||deps:yes
+#yes|atk|libatk1.0-0,libatk1.0-dev|exe,dev,doc,nls||deps:yes pet added
+#yes|at-spi2-atk|libatspi2.0-0,libatk-bridge2.0-0,libatk-bridge2.0-dev,libatspi2.0-dev|exe,dev,doc,nls||deps:yes #needed by gtk+3.pet added
+#yes|attr|libattr1|exe,dev,doc,nls||deps:yes pet added
 no|audiofile|libaudiofile1,libaudiofile-dev|exe,dev,doc,nls
 yes|audit|libaudit1|exe,dev,doc,nls||deps:yes #needed by xorg.
 yes|autoconf|autoconf|exe>dev,dev,doc,nls||deps:yes
