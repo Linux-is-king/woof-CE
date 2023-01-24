@@ -45,8 +45,7 @@ on:
 jobs:
   build:
     uses: ./.github/workflows/build.yml
-   - name: Install ninja-build tool
-  uses: seanmiddleditch/gha-setup-ninja@v3
+    uses: seanmiddleditch/gha-setup-ninja@v3
 
     with:
       repo: ${{ github.repository }}
