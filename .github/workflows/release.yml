@@ -41,12 +41,10 @@ on:
         type: boolean
         description: 'Upload release draft'
         required: false
-
+- name: Install ninja-build tool
 jobs:
   build:
     uses: ./.github/workflows/build.yml
-    uses: seanmiddleditch/gha-setup-ninja@v3
-
     with:
       repo: ${{ github.repository }}
       ref: ${{ github.ref }}     
