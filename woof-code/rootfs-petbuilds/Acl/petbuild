@@ -1,0 +1,11 @@
+download() {
+    [ -f acl-2.3.1.tar.xz ] || wget -t 3 -T 60 https://ftp.osuosl.org/pub/lfs/lfs-packages/11.2/acl-2.3.1.tar.xz
+}
+
+build() {
+./configure --prefix=/usr \
+ --disable-static \
+ --docdir=/usr/share/doc/acl-2.3.1
+make
+make install
+}
