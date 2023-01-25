@@ -207,7 +207,7 @@ yes|graphite2|libgraphite2-3,libgraphite2-dev|exe,dev,doc,nls||deps:yes #needed 
 yes|grep|grep|exe,dev>null,doc,nls||deps:yes
 yes|groff|groff,groff-base|exe,dev,doc,nls||deps:yes
 no|grsync||exe,dev,doc,nls
-yes|grub2_efi||exe #jma-y
+no|grub2_efi||exe #jma-y
 yes|grub4dos||exe,dev>null,doc,nls #jma-y
 yes|gsettings-desktop-schemas|gsettings-desktop-schemas|exe,dev,doc,nls||deps:yes #needs d-conf.
 no|gsm|libgsm1,libgsm1-dev|exe,dev,doc,nls
