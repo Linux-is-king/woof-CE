@@ -5,11 +5,19 @@ download() {
 build() {
 tar -xvf grub-2.06.tar.xz
 cd grub-2.06
-./configure --prefix=/usr          \
-            --sysconfdir=/etc      \
-            --disable-efiemu       \
-            --disable-werror
+mkdir -pv /usr/share/fonts/unifont &&
+gunzip -c ../unifont-14.0.04.pcf.gz > /usr/share/fonts/unifont/unifont.pcf
+
+./configure --prefix=/usr        \
+            --sysconfdir=/etc    \
+            --disable-efiemu     \
+            --enable-grub-mkfont \
+            --with-platform=efi  \
+            --target=x86_64      \
+            --disable-werror     &&
+unset TARGET_CC &&
 make
-make install
+
+make install &&
 mv -v /etc/bash_completion.d/grub /usr/share/bash-completion/completions
 }
