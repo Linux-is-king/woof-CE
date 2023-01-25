@@ -3,6 +3,6 @@ aaa_elflibs
 aaa_glibc-solibs
 aaa_libraries
 aaa_terminfo
+apt
 gcc-g++
 systemd
-apt
