@@ -4,7 +4,7 @@ download() {
 }
 
 build() {
-    tar -xvf seamonkey-2.53.15.en-US.linux-x86_64.tar.bz2
+    tar -xjf seamonkey-2.53.15.en-US.linux-x86_64.tar.bz2
     mv seamonkey/ /opt/
 
     ln -fs /opt/seamonkey/seamonkey /usr/bin/seamonkey
