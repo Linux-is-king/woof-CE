@@ -402,8 +402,13 @@ stack_onepupdrv() {
   grep -qm1 aufs /proc/filesystems || UNIONFS="overlay"
  fi
  if [ "$UNIONFS" = 'overlay' ]; then
-  remount_overlay -e "s~lowerdir=([^,]+)~lowerdir=${SFS_MP}:\1~" -e "s~lowerdir=,~lowerdir=${SFS_MP},~"
-  [ $? -eq 0 ] || return 5
+  if [ "$ONE_PREP" ];then
+   remount_overlay -e "s~lowerdir=([^,]+)~lowerdir=${SFS_MP}:\1~" -e "s~lowerdir=,~lowerdir=${SFS_MP},~"
+   [ $? -eq 0 ] || return 5
+  else
+   remount_overlay -e "s~lowerdir=([^,]+)~lowerdir=\1:${SFS_MP}~" -e "s~lowerdir=,~lowerdir=${SFS_MP},~"
+   [ $? -eq 0 ] || return 5
+  fi
  else
   mountpoint -q /pup_new
   if [ $? -ne 0 ];then
@@ -806,7 +811,7 @@ remount_overlay() {
   umount -l /pup_new
  else
   mkdir /mnt/tmpfs/pup_work
-  OPTS="lowerdir=,upperdir=/mnt/tmpfs/pup_rw,workdir=/mnt/tmpfs/pup_work,xino=on"
+  OPTS="lowerdir=,upperdir=/mnt/tmpfs/pup_rw,workdir=/mnt/tmpfs/pup_work,xino=on,metacopy=off"
  fi
  NEWOPTS=`echo "$OPTS" | sed -E "$@"`
  echo "mount -t overlay -o ${NEWOPTS} unionfs /pup_new" #debug
@@ -1083,15 +1088,15 @@ fi
 [ "$KBUILD" ] && copy_onepupdrv "$KBUILD"
 
 #stack the SFSs on top of pdrv
+[ "$DEVX" ] && { LOADMSG="devx"; stack_onepupdrv "$DEVX" "dev"; }
+[ "$NLSX" ] && { LOADMSG="nlsx"; stack_onepupdrv "$NLSX" "nls"; }
+[ "$DOCX" ] && { LOADMSG="docx"; stack_onepupdrv "$DOCX" "doc"; }
+[ "$KBUILD" ] && { LOADMSG="kbuild"; stack_onepupdrv "$KBUILD" "k"; }
 [ "$FDRV" ] && { LOADMSG="fdrv"; stack_onepupdrv "$FDRV" "f"; }
 [ "$ZDRV" ] && { LOADMSG="zdrv"; stack_onepupdrv "$ZDRV" "z"; }
-[ "$YDRV" ] && { LOADMSG="ydrv"; stack_onepupdrv "$YDRV" "y" "p"; }
 [ "$BDRV" ] && { LOADMSG="bdrv"; stack_onepupdrv "$BDRV" "b" "p"; }
+[ "$YDRV" ] && { LOADMSG="ydrv"; stack_onepupdrv "$YDRV" "y" "p"; }
 [ "$ADRV" ] && { LOADMSG="adrv"; stack_onepupdrv "$ADRV" "a" "p"; }
-[ "$KBUILD" ] && { LOADMSG="kbuild"; stack_onepupdrv "$KBUILD" "k" "p"; }
-[ "$DEVX" ] && { LOADMSG="devx"; stack_onepupdrv "$DEVX" "dev" "p"; }
-[ "$DOCX" ] && { LOADMSG="docx"; stack_onepupdrv "$DOCX" "doc" "p"; }
-[ "$NLSX" ] && { LOADMSG="nlsx"; stack_onepupdrv "$NLSX" "nls" "p"; }
 
 #process SAVESPEC - takes precedence - written by shutdownconfig
 if [ -f "${P_MP}${PSUBDIR}/SAVESPEC" ];then
@@ -1373,7 +1378,7 @@ if [ "$SAVEPART" -a "$UNIONFS" = 'overlay' -a -f /pup_new/etc/rc.d/BOOTCONFIG ];
  for ONE_SFS in $EXTRASFSLIST; do
   LOOP=`losetup -f`
   find_onepupdrv "$SAVEPART" "" "$ONE_SFS" "p" "1"
-  [ "$ONE_FN" ] && { LOADMSG="extra"; setup_onepupdrv "$ONE_PART,$ONE_FS,$ONE_FN" "ro${LOOP#/dev/loop}" "p"; }
+  [ "$ONE_FN" ] && { LOADMSG="extra"; setup_onepupdrv "$ONE_PART,$ONE_FS,$ONE_FN" "ro${LOOP#/dev/loop}" ""; }
  done
 fi
 
