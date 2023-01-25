@@ -1,5 +1,5 @@
 download() {
-    [ unifont-15.0.01.pcf.gz ] || wget -t 3 -T 60 https://unifoundry.com/pub/unifont/unifont-15.0.01/font-builds/unifont-15.0.01.pcf.gz
+    [ -f unifont-15.0.01.pcf.gz ] || wget -t 3 -T 60 https://unifoundry.com/pub/unifont/unifont-15.0.01/font-builds/unifont-15.0.01.pcf.gz
 }
 
 build() {
