@@ -156,6 +156,7 @@ jobs:
         sudo install -m 755 local-repositories/mkisofs /usr/local/bin/mkisofs
     - name: Install ninja-build tool
       uses: seanmiddleditch/gha-setup-ninja@v3
+        version:3
     - name: 3builddistro
       timeout-minutes: 180
       run: |
