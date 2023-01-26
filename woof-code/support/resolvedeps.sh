@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 PKGS_SPECS_TABLE_RESOLVED=0
@@ -50,6 +51,9 @@ ${ONEPKGSPEC}"
 
         for DEP in $DEPS; do
             if [ $DEPTH -ne 0 ]; then
+		# hack for Devuan: debdb2pupdb doesn't understand dependency on libsystemd0|liblogind0 and takes the first option
+                [ "$DISTRO_BINARY_COMPAT" = "devuan" -a "$DEP" = "libsystemd0" ] && DEP="libelogind0"
+
                 FOUND=0
                 for PKG in $INSTALLED_PKGS $MISSING; do
                     [ "$PKG" != "$DEP" ] && continue
