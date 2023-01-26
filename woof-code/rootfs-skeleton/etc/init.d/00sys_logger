@@ -1,0 +1,12 @@
+#!/bin/ash
+
+case $1 in
+ start)
+  syslogd -m 0
+  klogd
+ ;;
+ stop)
+  killall klogd
+  killall syslogd
+ ;;
+esac

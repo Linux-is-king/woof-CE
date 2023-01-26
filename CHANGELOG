@@ -131,3 +131,5 @@ System:
   * The scripts just echo lines..
 - puppyinstaller
   * 
+-rolled every thing back to september 2020, then added the pet build folder, git hub scripts, kernels and the up to date woof_distro folder ( and a few others ).
+hopefully this will fix several of the issues ( I cant seem to find what is breaking apt so I started here ..)

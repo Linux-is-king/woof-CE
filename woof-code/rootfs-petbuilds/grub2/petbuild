@@ -1,0 +1,20 @@
+download() {
+    [ -f grub-2.06.tar.xz ] || wget -t 3 -T 60 https://mirror.dogado.de/LFS/lfs-packages/11.2/grub-2.06.tar.xz
+}
+
+build() {
+tar -xvf grub-2.06.tar.xz
+cd grub-2.06
+./configure --prefix=/usr        \
+            --sysconfdir=/etc    \
+            --disable-efiemu     \
+            --enable-grub-mkfont \
+            --with-platform=efi  \
+            --target=x86_64      \
+            --disable-werror     &&
+unset TARGET_CC &&
+make
+
+make install &&
+mv -v /etc/bash_completion.d/grub /usr/share/bash-completion/completions
+}

@@ -1,0 +1,14 @@
+#!/bin/ash
+#(c) Copyright Barry Kauler Nov. 2010. License GPL v3 /usr/share/doc/legal.
+
+#wait for snd_ modules to complete loading...
+#this sleep benefits all slow peripherals.
+sleep 6
+
+for service_script in /etc/init.d/*
+do
+ [ -x $service_script ] && $service_script start
+done
+unset service_script
+
+###END###

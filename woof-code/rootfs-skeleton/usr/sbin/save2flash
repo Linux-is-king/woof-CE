@@ -1,0 +1,42 @@
+#!/bin/sh
+#2007 Lesser GPL licence v2 (http://www.fsf.org/licensing/licenses/lgpl.html)
+
+. /etc/rc.d/PUPSTATE
+if [ $PUPMODE -ne 13 ] ; then
+	echo "save2flash: Wrong PUPMODE ($PUPMODE)"
+	exit 1
+fi
+
+if pidof X >/dev/null 2>&1 || pidof Xorg >/dev/null 2>&1 ; then
+	if [ -z "$DISPLAY" ] ; then
+		export DISPLAY=':0'
+	fi
+fi
+
+if pidof snapmergepuppy 2>/dev/null ; then
+	echo "snapmergepuppy is running"
+	exit 1
+fi
+
+if [ "$1" = "pup_event" ] ; then
+	RUNPS="`busybox ps`"
+	#some apps should not be disturbed by this background stuff...
+	if [ "`echo "$RUNPS" | grep -w -E 'make|cc|gcc|imake|cmake|new2dir|xorriso|xorrecord|xine|gxine|petget|wget|axel|dotpup|mplayer|gmplayer|gcurl|gimv|burniso2cd|growisofs|cdrecord|pcdripper|xfmedia|xmms|ripoff|pdvdrsab|pburn|mhwaveedit|installpkg\.sh|downloadpkgs\.sh|removepreview\.sh'`" != "" ] ; then
+		exit 1
+	fi
+fi
+
+if [ "$DISPLAY" ] ; then
+	yaf-splash -bg orange -placement top -close never -text "$(gettext "Saving RAM to 'pup_save'...")" &
+	YAFPID=$!
+else
+	echo "Saving RAM to 'pup_save'..."
+fi
+
+sync
+nice -n 19 snapmergepuppy
+[ "$YAFPID" ] && kill $YAFPID
+
+exit 0
+
+### END ###

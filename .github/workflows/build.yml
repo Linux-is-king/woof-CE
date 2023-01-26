@@ -175,4 +175,3 @@ jobs:
           *.iso
           *.sfs
         retention-days: ${{ inputs.retention }}
-
