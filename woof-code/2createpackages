@@ -12,6 +12,8 @@
 #As a last resort, if target pkg is wrong, a file 'FIXUPHACK' is a script that can be at top dir
 #  in template. It executes in target, with current-dir set to where FIXUPHACK is located. (ex: perl_tiny).
 
+[ -n "$GITPOD_WORKSPACE_ID" -a "`id -u`" -ne 0 ] && exec fakeroot $0 "$@"
+
 #set -x
 MWD=$(pwd)
 export LANG=C #faster.
@@ -112,6 +114,8 @@ STRIP_BIN="`which strip`"
 rm -f ERROR-2CREATEPACKAGES 2>/dev/null
 
 pre_process_pkg() {
+	[ ! -d ${PKG_DIR} ] && return
+
 	# before processing the whole package, check if there is a _PRE file
 	# which contains code to fix/trim dowm stuff to speed up processing...
 	if [ -f ${MWD}/packages-templates/${GENERICNAME}/_PRE ] ; then
@@ -143,6 +147,7 @@ do
 	echo "You will need to find a matching package and place in packages-pet,"
 	echo "or packages-${BINARIES} as appropriate."
 	echo "Do it, then rerun this script and choose to build ${GENERICNAME}." ) >> ERROR-2CREATEPACKAGES
+	[ -z "$GITHUB_ACTIONS" ] || exit 1
 	continue
  fi
 
@@ -195,6 +200,9 @@ do
  PKG_DIR=${EXE_DIR}
  #------------------------------------------------------------------------
 
+ FIXUPHACK_FILE=""
+ DISABLE_POST_INSTALL_SCRIPT=""
+
  #inject $FNDIT at end of do-done, runs faster...
  #==== extract packages ======
  while read ONEDBENTRY
@@ -236,6 +244,7 @@ do
 		echo "ERROR: ${ONEBINARYPKG} does not exist."
 		echo "Please find a package that matches, place it in packages-${PSUB},"
 		echo "then run this script again and choose to build ${GENERICNAME}." ) >> ERROR-2CREATEPACKAGES
+		[ -z "$GITHUB_ACTIONS" ] || exit 1
 		continue 2 #skip this pkg.
 	fi
   
@@ -254,8 +263,6 @@ do
 	case $DB_fullfilename in
 	*.pet) echo -n ;;
 	*)
-		FIXUPHACK_FILE=""
-		DISABLE_POST_INSTALL_SCRIPT=""
 		if [ -f packages-templates/${GENERICNAME}/FIXUPHACK ] ; then
 			FIXUPHACK_FILE="packages-templates/${GENERICNAME}/FIXUPHACK"
 		elif [ -f packages-templates/${GENERICNAME}_FIXUPHACK ] ; then
@@ -282,7 +289,6 @@ do
 			rm -f packages-${DISTRO_FILE_PREFIX}/${PETPKG}.tar
 			continue
 		fi
-		sync
 		rm -f packages-${DISTRO_FILE_PREFIX}/${PETPKG}.tar
 		if [ -d ${TARGET_DIR}/usr/share/applications/ ] ; then
 			sed -i 's| %u|| ; s| %U|| ; s| %f|| ; s| %F||' ${TARGET_DIR}/usr/share/applications/*.desktop
@@ -307,12 +313,11 @@ do
 			if [ ! "$DISABLE_POST_INSTALL_SCRIPT" ] ; then
 				echo " executing (Slackware) install script"
 				( cd ${TARGET_DIR} ; sh ./install/doinst.sh )
-				sync
 				rm -rf ${TARGET_DIR}/install
 			fi
 		fi
 		;;
-	*.tar.*) #gentoo and others 120515
+	*.tar.*|*.xbps) #gentoo and others 120515
 		mkdir -p ${TARGET_DIR}/
 		PKGNAME="${PKGNAME%.tar.bz2}" #ex: bash-3.2
 		tar --directory=${TARGET_DIR}/ -xf ${ONEBINARYPKG}
@@ -394,9 +399,12 @@ do
 			continue
 			;;
 		#-- DEV -- development
-		*"X11/config"|*"/include"|*"/pkgconfig"|*"/aclocal"|*"/cvs"*|*"/svn"*|*"/src"*|*"/gcc")
+		*"X11/config"|*"/include"|*"/pkgconfig"|*"/aclocal"|*"/cvs"*|*"/svn"*|*"/src"*|*"/gcc"|*"/gir-1.0"*|*"/share/cmake"*)
 			if [ "$DEV" = "_NULL" ] ; then
 				rm -rf ${ONEDIR}
+				continue
+			fi
+			if [ -z "$DEV" ] ; then
 				continue
 			fi
 			if [ "$DEVX" ] ; then
@@ -437,6 +445,7 @@ do
 				continue
 			fi
 		esac
+		
 		#find various config files... all .a .la .m4 files
 		case "$ONEFILE" in *"-config"|*"config.sh"|*"Conf.sh"|*.a|*.la|*.m4|*.o|*.cmake)
 			[ "$DEV" = "_NULL" ] && { rm -f "$ONEFILE" ; continue ; }
@@ -444,13 +453,16 @@ do
 			mv -f "$ONEFILE" "$ONEFILE" "${DEV_DIR}/${ONEPATH}/" 2>/dev/null
 			continue
 		esac
+		
 		[ "$EXE" = "_NULL" ] && { rm -f "$ONEFILE" ; continue ; }
+		
 		#anything left over goes into the main 'executable' package...
 		case "$ONEFILE" in *"/bin"*|*"/sbin"*|*"/lib"*)
 			if [ "$STRIP_BINARIES" = "yes" ];then #build.conf
 			if [ "$STRIP_BIN" -a "$WOOF_HOSTARCH" = "$WOOF_TARGETARCH" ];then #needs devx.
 				if [ ! -h "$ONEFILE" ];then #make sure it isn't a symlink
 					case $(file "$ONEFILE") in *" ELF "*)
+					        strip --strip-unneeded "$ONEFILE"
 						strip --strip-debug "$ONEFILE" ;;
 					esac
 				fi
@@ -490,6 +502,8 @@ do
 done #process next GENERICNAME.
 
 echo -e "\nScript finished."
-[ ! -s ERROR-2CREATEPACKAGES ] && echo "WARNING: Errors were logged to file ERROR-2CREATEPACKAGES"
+[ -s ERROR-2CREATEPACKAGES ] || exit 0
+echo "WARNING: Errors were logged to file ERROR-2CREATEPACKAGES"
+exit 1
 
 ###END###
