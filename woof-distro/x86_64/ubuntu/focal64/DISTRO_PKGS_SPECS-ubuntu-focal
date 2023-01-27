@@ -705,6 +705,7 @@ yes|qt5-dev|libpoppler-qt5-dev,qt5-gtk2-platformtheme,qt5-qmake,qt5-qmake-bin,qt
 yes|QtNote||exe
 yes|quickpet_fossa64||exe,dev,doc,nls
 yes|qwinff||exe,dev,doc,nls
+yes|radeon_firmware||exe,dev
 yes|raptor2|libraptor2-0,libraptor2-dev|exe,dev,doc,nls| #needed by redland.
 yes|readline|libreadline8,libreadline-dev,readline-common|exe,dev,doc,nls
 yes|redland|librdf0,librdf0-dev,librasqal3|exe,dev,doc,nls| #needed by abiword. left out -dev libs.
