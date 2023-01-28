@@ -56,10 +56,10 @@ if [ "$BUILD_NLSX" = "yes" ] ; then
 			cp -a --remove-destination ../packages-${DISTRO_FILE_PREFIX}/${i}_NLS/* nlsx/
 		fi
 	done
-	if [ -d bdrv_NLS ] ; then
-		echo -n " bdrv_NLS"
-		cp -a --remove-destination bdrv_NLS/* nlsx/
-	fi
+	#if [ -d bdrv_NLS ] ; then
+		#echo -n " bdrv_NLS"
+		#cp -a --remove-destination bdrv_NLS/* nlsx/
+	#fi
 	echo
 	rm -f nlsx/pet.specs
 	mkdir -p nlsx/var/local
