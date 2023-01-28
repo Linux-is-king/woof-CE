@@ -30,10 +30,10 @@ if [ "$BUILD_DOCX" = "yes" ] ; then
 			cp -a --remove-destination ../packages-${DISTRO_FILE_PREFIX}/${i}_DOC/* docx/
 		fi
 	done
-	if [ -d bdrv_DOC ] ; then
-		echo -n " bdrv_DOC"
-		cp -a --remove-destination bdrv_DOC/* docx/
-	fi
+	#if [ -d bdrv_DOC ] ; then
+		#echo -n " bdrv_DOC"
+		#cp -a --remove-destination bdrv_DOC/* docx/
+	#fi
 	echo
 	rm -f docx/pet.specs
 	find docx/usr/share/doc -iname 'changelog*.gz' -delete
