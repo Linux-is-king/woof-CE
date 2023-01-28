@@ -1,5 +1,5 @@
 #!/bin/ash
-
+# remove x to use if needed. 
 cmp -s /initrd/pup_b/var/lib/dpkg/status /var/lib/dpkg/status
 [ $? -ne 1 ] && exit 0
 
