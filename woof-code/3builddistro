@@ -1034,9 +1034,9 @@ if [ "$BUILD_SFS" = 'yes' ]; then
 				#echo "Now building sandbox3/bdrv"
 				#$MWD/support/bdrv.sh || exit 1
 			#fi
-			;;
-		esac
-	fi
+			#;;
+		#esac
+	#fi
 
 	#build the rootfs-complete sfs...
 	echo -e "\nNow building the main f.s., ${PUPPYSFS}..."
