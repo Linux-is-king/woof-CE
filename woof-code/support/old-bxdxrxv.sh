@@ -1,5 +1,5 @@
 #!/bin/sh -e
-
+#remve x if needed later .. 
 . ../DISTRO_SPECS
 . ../_00build.conf
 [ ! -e ../_00build_2.conf ] || . ../_00build_2.conf
