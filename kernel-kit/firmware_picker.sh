@@ -1,12 +1,3 @@
-#!/bin/bash
-
-# GPL-V2 or later at your discretion
-# (c) Mick Amadio, 2020 01micko@gmail.com, Gold Coast QLD, Australia
-
-# this script depends on modinfo to get firmware version of modules
-# in the target kernel. Installs correct version from linux-firmware
-# to the fdrv (option 'f') or zdrv (builtin - option 'b')
-
 export LANG=C #faster
 . ./build.conf
 
@@ -85,7 +76,6 @@ echo "### If 'missing' is after a firmware entry it is missing or non-free and w
 # NOTE 0: modinfo to the actual full path to the .ko module file works
 # NOTE 1: some firmware files won't exist because they are proprietary
 # broadcom wireless is an example, and some dvb tuners and some bluetooth
-
 intelbt=0
 for m in `find "$module_dir" -type f -name "*.ko"`
 do
@@ -138,7 +128,6 @@ do
 				continue
 				;;
 			esac
-
 			if [ -e "$SRC_FW_DIR/$fw" ];then
 				mkdir -p $FIRMWARE_RESULT_DIR/$fw_dir
 				cp -L -n $SRC_FW_DIR/$fw $FIRMWARE_RESULT_DIR/$fw_dir
@@ -148,7 +137,6 @@ do
 			fi
 		fi		
 	done
-
 	case $m in
 	*/ath*k*.ko) # some firmware doesn't appear in modinfo
 	fw_top_dir=${m##*/}
@@ -173,6 +161,17 @@ do
 		fw_msg ${F##*/} $fw_tmp_list # log to zdrv
 	done
 	rm -f /tmp/modstrings
+	;;
+	*/amdgpu.ko|*/radeon.ko) # some paths are formatted at runtime and don't appear in modinfo, i.e. radeon/%s_mec2.bin
+	for F in $SRC_FW_DIR/`basename "$m" .ko`/*_*.bin;do
+		fw_subdir=${F#$SRC_FW_DIR/}
+		fw_subdir=${fw_subdir%/*}
+		fw_basename=${F##*/}
+		[ -e ${FIRMWARE_RESULT_DIR}/${fw_subdir}/${fw_basename} ] && continue
+		[ -z "`ls ${FIRMWARE_RESULT_DIR}/${fw_subdir}/${fw_basename%%_*}_*.bin 2>/dev/null`" ] && continue
+		cp -L -n $F ${FIRMWARE_RESULT_DIR}/${fw_subdir}
+		fw_msg ${fw_subdir}/${fw_basename} $fw_tmp_list # log to zdrv
+	done
 	;;
 	esac
 done
