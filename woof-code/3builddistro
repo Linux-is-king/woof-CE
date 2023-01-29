@@ -7,9 +7,9 @@ export MWD=$(pwd)
 export WKGDIR=$MWD
 
 . ./_00func
-. ./DISTRO_SPECS     # this has DISTRO_VERSION.
 . ./_00build.conf
 [ -f ./_00build_2.conf ] && . ./_00build_2.conf
+. ./DISTRO_SPECS     # this has DISTRO_VERSION.
 source_compat_repos  # ./DISTRO_COMPAT_REPOS-
 source_pkgs_specs    # ./DISTRO_PKGS_SPECS-
 . ./DISTRO_PET_REPOS # want variable PACKAGELISTS_PET_ORDER
@@ -38,7 +38,6 @@ PKGLISTS_COMPAT="`echo "$PKG_DOCS_DISTRO_COMPAT" | tr ' ' '\n' | cut -f 3 -d '|'
 PKGS_SPECS_TABLE="`echo "$PKGS_SPECS_TABLE" | grep -v '^#'`" # remove comments
 
 export DISTRO_NAME DISTRO_VERSION DISTRO_COMPAT_VERSION
-#export BDRVSFS="bdrv_${DISTRO_FILE_PREFIX}_${DISTRO_VERSION}.sfs"
 export PUPPYSFS="puppy_${DISTRO_FILE_PREFIX}_${DISTRO_VERSION}.sfs"
 export ZDRVSFS="zdrv_${DISTRO_FILE_PREFIX}_${DISTRO_VERSION}.sfs"
 export FDRVSFS="fdrv_${DISTRO_FILE_PREFIX}_${DISTRO_VERSION}.sfs"
@@ -50,6 +49,8 @@ export NLSXSFS="nlsx_${DISTRO_FILE_PREFIX}_${DISTRO_VERSION}.sfs"
 
 if [ "$BUILD_ZIP" = "yes" ]; then
 	SDFLAG="zip"
+elif [ "$BUILD_CROS_IMAGE" = "yes" ]; then
+	CROSFLAG=1
 elif [ -z "$BUILD_ISO" -o "$BUILD_ISO" = "yes" ]; then
 	ISOFLAG=1
 elif [ "$DISTRO_TARGETARCH" = "arm" ]; then
@@ -65,14 +66,13 @@ rm -rf sandbox3/rootfs-complete
 rm -rf sandbox3/devx
 rm -rf sandbox3/docx ${DOCXSFS}
 rm -rf sandbox3/nlsx ${NLSXSFS}
-#rm -rf sandbox3/bdrv sandbox3/bdrv_NLS sandbox3/bdrv_DOC sandbox3/adrv sandbox3/ydrv sandbox3/fdrv
+rm -rf sandbox3/adrv sandbox3/ydrv sandbox3/fdrv
 mkdir -p sandbox3/rootfs-complete/etc
 mkdir -p sandbox3/devx
 cp DISTRO_SPECS sandbox3/rootfs-complete/etc/
 
 #copy the skeleton...
 cp -a rootfs-skeleton/* sandbox3/rootfs-complete/
-
 if [ "$XAUTOCONF" = 'yes' ];then
 	echo 'enabling xorg-autoconf'; sleep 1
 	chmod 755 sandbox3/rootfs-complete/usr/sbin/xorg-autoconf
@@ -109,18 +109,11 @@ and edit it to include your customised package list.
 			state=false
 			grep -q 'yes|rox.*filer|' $PKGSSPECS && state=true
 			;;
-		jwm_config)
+		jwm_config|ptheme|pt_*)
 			if grep -q 'yes|jwmconfig' $PKGSSPECS ; then
 				state=false #cant choose them if jwmconfig is in specs. 
 			elif grep -q 'yes|jwm|' $PKGSSPECS ; then
 				state=true
-			else
-				state=false
-				for PETBUILD in $PETBUILDS; do
-					[ "$PETBUILD" = "jwm" ] || continue
-					state=true
-					break
-				done
 			fi
 			;;
 		pmusic*)
@@ -134,14 +127,8 @@ and edit it to include your customised package list.
 			;;
 		xlock_gui)
 			state=true
-			grep -q 'yes|xserver_xorg|' $PKGSSPECS || state=false
 			# backward compatibility: it used to be a noarch pet
 			grep -q 'yes|xlock_gui|' $PKGSSPECS && state=false
-			for PETBUILD in $PETBUILDS; do
-				[ "$PETBUILD" = "swaylock" ] || continue
-				state=false
-				break
-			done
 			;;
 		acpid_busybox)
 			state=true
@@ -165,6 +152,18 @@ and edit it to include your customised package list.
 		change_kernels)
 			state=false
 			[ "$DISTRO_KERNEL_PET" = 'Huge_Kernel' -a "$ISOFLAG" ] && state=true
+			;;
+		simple_installer)
+			state=false
+			case $WOOF_TARGETARCH in
+			x86*) [ ! "$ISOFLAG" ] && state=true ;;
+			esac
+			;;
+		simple_updater)
+			state=false
+			case $WOOF_TARGETARCH in
+			x86*) [ -z "$ISOFLAG" -a -n "$GITHUB_REPOSITORY" ] && state=true ;;
+			esac
 			;;
 		*)
 			state=true
@@ -243,7 +242,7 @@ function copy_pkgs_to_build() {
 		#note, do not filter #! /bin/sh (with a space)...
 		(
 		echo -e "\n#== packages-${DISTRO_FILE_PREFIX}/${ONEPKG} ==\n"
-		grep  -E -v '^#!/bin/sh' sandbox3/${SFS_DIR}/pinstall.sh
+		grep  -E -v '^\#\!\/bin\/sh' sandbox3/${SFS_DIR}/pinstall.sh
 		) >> sandbox3/${xPRE}pinstall.sh
 		rm -f sandbox3/${SFS_DIR}/pinstall.sh
 	fi
@@ -263,18 +262,12 @@ for PKG in ${ADRV_INC} ${YDRV_INC} ${FDRV_INC}; do
 		EXTRAS_LIST="${PKG}"
 	fi
 done
-PKGLIST=
-while IFS='|' read YESNO NAME ETC; do
-	[ "$YESNO" != "yes" ] && continue
-	case "$EXTRAS_LIST" in
-	"$NAME"|"$NAME|"*|*"|$NAME|"*|*"|$NAME") continue ;;
-	esac
-	if [ -n "$PKGLIST" ]; then
-		PKGLIST="$PKGLIST $NAME"
-	else
-		PKGLIST="$NAME"
-	fi
-done <<< "$PKGS_SPECS_TABLE"
+if [ -n "${EXTRAS_LIST}" ];then
+	PKGLIST="`echo "$PKGS_SPECS_TABLE" | grep '^yes' | sed s/#.*//g | grep -vE "${EXTRAS_LIST}" | cut -f 2 -d '|' | tr '\n' ' '`"
+else
+	PKGLIST="`echo "$PKGS_SPECS_TABLE" | grep '^yes' | sed s/#.*//g | cut -f 2 -d '|' | tr '\n' ' '`"
+fi
+PKGLIST="${PKGLIST}"
 copy_pkgs_to_build "${PKGLIST}" rootfs-complete
 echo
 
@@ -290,7 +283,7 @@ if [ -z "$PETBUILDS" ]; then
 	PETBUILDS="pmaterial_icons puppy_flat_icons puppy_standard_icons"
 fi
 
-if [ "$BUILD_DEVX" = "yes" ] ; then
+if [ "$BUILD_DEVX" = "yes" -o -n "$PETBUILDS" ] ; then
 	cd $WKGDIR
 	echo "Building sandbox3/devx ..."
 	echo "$PKGS_SPECS_TABLE" | grep '^yes' | cut -f 2 -d '|' | sed -e 's%$%_DEV%' > /tmp/ALLGENNAMESD
@@ -306,15 +299,11 @@ if [ "$BUILD_DEVX" = "yes" ] ; then
 		fi
 	done
 	rm -f /tmp/ALLGENNAMESD
-	[ "$USR_SYMLINKS" = "yes" ] && usrmerge sandbox3/devx 0
 	echo
 fi
 
 echo "removing obsolete libtool *.la files"
 find sandbox3/rootfs-complete/ sandbox3/devx/ -type f -name "*.la" -delete # delete old libtool files
-
-# set EXTRA_PROCESSING in _00build.conf to perform any processing required - e.g. for devx
-[ -n "$EXTRA_PROCESSING" ] && . $EXTRA_PROCESSING
 
 CROSSBUILD=0
 QEMU=
@@ -347,14 +336,6 @@ fi
 #creates devx-only-installed-packages.
 ./support/findwoofinstalledpkgs # moved to here so we can add /tmp/rootfs-packages.specs
 
-if [ "$DISTRO_BINARY_COMPAT" = "void" ]; then
-  echo "Generating /var/db/xbps/pkgdb-0.38.plist - takes a while - please wait"
-  ./support/void/makepkgdb.sh status/findpkgs_FINAL_PKGS-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION} \
-                             packages-${DISTRO_FILE_PREFIX} \
-                             sandbox3/rootfs-complete/var/db/xbps/pkgdb-0.38.plist
-  echo "Generation finished - thanks for waiting"
-fi
-
 ### new {a,f,y}drv build - this sorts the packages and builds the {a,f,y}drv filesystem
 ADRV_INCLUDE='';FDRV_INCLUDE_='';YDRV_INCLUDE=''
 [ "$(echo $ADRV_INC)" != "" ] && ADRV_INCLUDE=adrv
@@ -370,14 +351,12 @@ if [ -n "$ADRV_INCLUDE" -o -n "$FDRV_INCLUDE" -o -n "$YDRV_INCLUDE" ];then
 			echo '#!/bin/sh' > sandbox3/apinstall.sh
 			mkdir -p sandbox3/adrv/usr/local/bin
 			copy_pkgs_to_build "${ADRV_INC}" adrv
-			[ "$USR_SYMLINKS" = "yes" ] && usrmerge sandbox3/adrv 0
 			chmod 755 sandbox3/apinstall.sh
 			echo;;
 		fdrv)
 			echo '#!/bin/sh' > sandbox3/fpinstall.sh
 			mkdir -p sandbox3/fdrv/
 			copy_pkgs_to_build "${FDRV_INC}" fdrv
-			[ "$USR_SYMLINKS" = "yes" ] && usrmerge sandbox3/fdrv 0
 			chmod 755 sandbox3/fpinstall.sh
 			echo
 			CONF_DIR=no;;
@@ -385,7 +364,6 @@ if [ -n "$ADRV_INCLUDE" -o -n "$FDRV_INCLUDE" -o -n "$YDRV_INCLUDE" ];then
 			echo '#!/bin/sh' > sandbox3/ypinstall.sh
 			mkdir -p sandbox3/ydrv/usr/local/bin
 			copy_pkgs_to_build "${YDRV_INC}" ydrv
-			[ "$USR_SYMLINKS" = "yes" ] && usrmerge sandbox3/ydrv 0
 			chmod 755 sandbox3/ypinstall.sh
 			echo;;
 		esac
@@ -512,7 +490,6 @@ done
 echo
 echo "Executing sandbox3/pinstall.sh post-install script..."
 cd $WKGDIR/sandbox3/rootfs-complete
-[ "$DISTRO_BINARY_COMPAT" = "void" ] && [ $CROSSBUILD -eq 0 -o -n "$QEMU" ] && chroot . ldconfig
 $WKGDIR/sandbox3/pinstall.sh
 ( ### new {a,f,y}drv stuff - execute the '{a,f,y}pinstall.sh'
 	cd $WKGDIR/sandbox3/
@@ -538,8 +515,7 @@ if [ -n "$PROMPT" ]; then
 fi
 
 echo "Now setting /etc/os-release file"
-mkdir -p usr/lib
-cat > usr/lib/os-release << _EOF
+cat > etc/os-release << _EOF
 NAME=Puppy
 VERSION="$DISTRO_VERSION"
 ID=puppy_$DISTRO_FILE_PREFIX
@@ -551,8 +527,6 @@ HOME_URL="http://puppylinux.com/"
 SUPPORT_URL="http://www.murga-linux.com/puppy/index.php"
 BUG_REPORT_URL="https://github.com/puppylinux-woof-CE/woof-CE"
 _EOF
-rm -f etc/os-release
-ln -s ../usr/lib/os-release etc/
 
 cd $WKGDIR
 
@@ -606,7 +580,6 @@ else
 	NEWVARIABLES="#Puppy default filenames...
 #Note, the 'SFS' files below are what the 'init' script in initrd.gz searches for,
 #for the partition, path and actual files loaded, see PUPSFS and ZDRV in /etc/rc.d/PUPSTATE
-#DISTRO_BDRVSFS='${BDRVSFS}'
 DISTRO_PUPPYSFS='${PUPPYSFS}'
 DISTRO_ZDRVSFS='${ZDRVSFS}'
 DISTRO_FDRVSFS='${FDRVSFS}'
@@ -619,22 +592,24 @@ echo "DISTRO_PUPPYDATE='${DISTRO_PUPPYDATE}'" >> rootfs-complete/etc/DISTRO_SPEC
 [ "${ARCHDIR}" ] && echo "DISTRO_ARCHDIR='${ARCHDIR}'" >> rootfs-complete/etc/DISTRO_SPECS
 
 #build the initrd-tree...
-echo -e "\nNow building initial ramdisk..."
+if [ ! "$CROSFLAG" ]; then
+	echo -e "\nNow building initial ramdisk..."
 
-#### initrd-progs #### build/initrd.gz...
-cp rootfs-complete/etc/DISTRO_SPECS ../initrd-progs/DISTRO_SPECS
+	#### initrd-progs #### build/initrd.gz...
+	cp rootfs-complete/etc/DISTRO_SPECS ../initrd-progs/DISTRO_SPECS
 
-rm -f build/initrd.[gx]z ../initrd-progs/initrd.[gx]z
-(
-	cd ../initrd-progs/
-	./build.sh -prebuilt -auto -arch ${WOOF_TARGETARCH:-default} ${INITRD_LANG} ${INITRD_KM}
-)
-mv -fv ../initrd-progs/initrd.[gx]z build/ || exit 1
+	rm -f build/initrd.[gx]z ../initrd-progs/initrd.[gx]z
+	(
+		cd ../initrd-progs/
+		./build.sh -prebuilt -auto -arch ${WOOF_TARGETARCH:-default} ${INITRD_LANG} ${INITRD_KM}
+	)
+	mv -fv ../initrd-progs/initrd.[gx]z build/ || exit 1
+	
 
-
-case $WOOF_TARGETARCH in x86*)
-	cp -fv ../initrd-progs/0initrd/README.txt build/ ;;
-esac
+	case $WOOF_TARGETARCH in x86*)
+		cp -fv ../initrd-progs/0initrd/README.txt build/ ;;
+	esac
+fi
 
 case $WOOF_TARGETARCH in x86*)
 	# ucode.cpio
@@ -723,11 +698,14 @@ if [ ! "$ISOFLAG" ]; then
 		usr/share/applications/Puppy-universal-installer.desktop \
 		usr/share/applications/Remaster-Puppy-live-CD.desktop
 	do rm -f rootfs-complete/${i} ; done
-	if [ "$SDFLAG" != "zip" ]; then
+	if [ "$SDFLAG" != "zip" -o "$CROSFLAG" ]; then
 		rm -f rootfs-complete/usr/sbin/resizepfile.sh \
 		      rootfs-complete/usr/share/applications/Resize-personal-storage-file.desktop \
 		      rootfs-skeleton/usr/sbin/pupsave-backup \
 		      rootfs-complete/usr/share/applications/Pupsave-hot-backup.desktop
+	fi
+	if [ "$FRUGALIFY" ]; then
+		rm -f rootfs-complete/usr/share/applications/SFS-Load.desktop
 	fi
 fi
 
@@ -778,28 +756,23 @@ fi
 
 #shared library loading...
 mkdir -p rootfs-complete/etc/ld.so.conf.d/ # may not be there
-if [ "$USR_SYMLINKS" = "yes" ];then
-	echo "/root/my-applications/lib" > rootfs-complete/etc/ld.so.conf.d/my-applications.conf
-else
-	( # > rootfs-complete/etc/ld.so.conf
-		echo 'include /etc/ld.so.conf.d/*.conf'
-		echo "/lib${lsuffix}"
-		echo "/usr/lib${lsuffix}"
-		if [ "$ARCHDIR" = "x86_64-linux-gnu" ] ; then #WOOF_TARGETARCH='x86_64'
-			echo "/lib64"
-			echo "/usr/lib64"
-			echo -e "/lib64\n/usr/lib64" > rootfs-complete/etc/ld.so.conf.d/lib64.conf
-		fi
-		[ -d rootfs-complete/usr/local/lib${lsuffix} ] && echo "/usr/local/lib${lsuffix}"
-		[ -d rootfs-complete/opt/qt4/lib${lsuffix} ] && echo "/opt/qt4/lib${lsuffix}"
-		echo "/root/my-applications/lib"
-	) > rootfs-complete/etc/ld.so.conf
-fi
+( # > rootfs-complete/etc/ld.so.conf
+	echo 'include /etc/ld.so.conf.d/*.conf'
+	echo "/lib${lsuffix}"
+	echo "/usr/lib${lsuffix}"
+	if [ "$ARCHDIR" = "x86_64-linux-gnu" ] ; then #WOOF_TARGETARCH='x86_64'
+		echo "/lib64"
+		echo "/usr/lib64"
+		echo -e "/lib64\n/usr/lib64" > rootfs-complete/etc/ld.so.conf.d/lib64.conf
+	fi
+	[ -d rootfs-complete/usr/local/lib${lsuffix} ] && echo "/usr/local/lib${lsuffix}"
+	[ -d rootfs-complete/opt/qt4/lib${lsuffix} ] && echo "/opt/qt4/lib${lsuffix}"
+	echo "/root/my-applications/lib"
+) > rootfs-complete/etc/ld.so.conf
 
 echo "Updating system config.."
 mkdir -p rootfs-complete/var/cache/fontconfig
 if [ $CROSSBUILD -eq 0 -o -n "$QEMU" ];then
-	[ "$DISTRO_BINARY_COMPAT" = "void" ] && [ $CROSSBUILD -eq 0 -o -n "$QEMU" ] && chroot rootfs-complete ldconfig
 	chroot rootfs-complete /etc/rc.d/rc.update w
 	# create a table for dialog/Xdialog: /usr/share/i18n/dialog_table
 	# 'chooselocale' is called from /etc/rc.d/rc.country at first boot and
@@ -838,15 +811,9 @@ else
 fi
 
 #111006 generic logo mechanism for all pups...
-logo=
 if [ -e rootfs-complete/usr/share/doc/puplogos/${DISTRO_FILE_PREFIX}.svg ] ; then
-	logo=/usr/share/doc/puplogos/${DISTRO_FILE_PREFIX}.svg
-elif [ -e rootfs-complete/usr/share/doc/puplogos/${DISTRO_BINARY_COMPAT}.svg ] ; then
-	logo=/usr/share/doc/puplogos/${DISTRO_BINARY_COMPAT}.svg
-fi
-if [ -n "$logo" ]; then
 	for logosize in 48 96 ; do
-		chroot rootfs-complete rsvg-convert -w ${logosize} -h ${logosize} -o /usr/share/doc/${DISTRO_FILE_PREFIX}${logosize}.png ${logo}
+		chroot rootfs-complete rsvg-convert -w ${logosize} -h ${logosize} -o /usr/share/doc/${DISTRO_FILE_PREFIX}${logosize}.png /usr/share/doc/puplogos/${DISTRO_FILE_PREFIX}.svg
 		ln -snf ${DISTRO_FILE_PREFIX}${logosize}.png rootfs-complete/usr/share/doc/puppylogo${logosize}.png
 	done
 else
@@ -910,13 +877,15 @@ if [ "$SDFLAG" != "" ];then
 	echo "BOOT_UDEVDCHILDREN='1'" >> rootfs-complete/etc/rc.d/BOOTCONSTRAINED #120709 is this a good idea? append --children-max=1 to udevd in rc.sysinit.
 fi
 
-if [ "$SDFLAG" != "" ];then
+if [ "$SDFLAG" != "" -o "$CROSFLAG" != "" ];then
 	echo "BOOT_DIRTYWRITE='1500'" >> rootfs-complete/etc/rc.d/BOOTCONSTRAINED #defer writing to disk. refer: http://www.lesswatts.org/tips/disks.php
 	echo "BOOT_BOARD='${BOOT_BOARD}'" >> rootfs-complete/etc/rc.d/BOOTCONSTRAINED #120714 read by quicksetup.
 fi
 
-# users shouldn't be able to read files under another home directory - i.e. leak .netrc
-busybox chmod 700 rootfs-complete/root rootfs-complete/home/spot
+if [ "$FRUGALIFY" ]; then
+	echo "PUPMODE='6'" > rootfs-complete/etc/rc.d/PUPSTATE
+	echo "PUNIONFS='overlay'" >> rootfs-complete/etc/rc.d/PUPSTATE
+fi
 
 if grep -q '^spot:' rootfs-complete/etc/passwd ; then
 	echo "Setting ownership of /home/spot"
@@ -947,59 +916,26 @@ exec $value \"\$@\"" > ${DRV_TGT}/usr/local/bin/$field
 	chmod 755 ${DRV_TGT}/usr/local/bin/$field
 done
 
-if [ -e rootfs-complete/usr/local/apps/ROX-Filer/AppRun ]; then
-	echo "Checking for missing default apps ..."
-	for default in rootfs-complete/usr/local/bin/default* ; do
-		app=${default##*/}
-		app=${app/default/}
-		dexec=`grep '^exec' $default | cut -f 2 -d " "`
-		chroot rootfs-complete sh -c "command -v $dexec >/dev/null 2>&1" && continue
+echo "Checking for missing default apps ..."
+for default in rootfs-complete/usr/local/bin/default* ; do
+    app=${default##*/}
+    app=${app/default/}
+    dexec=`grep '^exec' $default | cut -f 2 -d " "`
+    chroot rootfs-complete sh -c "command -v $dexec >/dev/null 2>&1" && continue
 
-		echo -n "$dexec "
-		cat << EOF > $default
+    echo -n "$dexec "
+    cat << EOF > $default
 #!/bin/sh
 exec missingdefaultapp $app
 EOF
-	done
-	echo
-else
-	echo "Setting up default apps via xdgdefaultapp ..."
-
-	rm -f rootfs-complete/usr/share/applications/mimeapps.list \
-	      rootfs-complete/usr/share/applications/mimeinfo.cache \
-	      rootfs-complete/usr/share/applications/default*.desktop \
-	      rootfs-complete/usr/share/applications/puppyapps.desktop
-
-	for PAIR in defaultarchiver=application/x-tar \
-	            defaultaudioeditor=audio/x-wav \
-	            defaultaudioplayer=audio/x-mp3 \
-	            defaultbrowser=x-scheme-handler/https \
-	            defaultcdplayer=audio/x-mp3 \
-	            defaultchat=x-scheme-handler/ircs \
-	            defaultdraw=image/svg+xml \
-	            defaultemail=x-scheme-handler/mailto \
-	            defaulthtmleditor=text/plain \
-	            defaulthtmlviewer=text/html \
-	            defaultimageeditor=image/bmp \
-	            defaultimageviewer=image/bmp \
-	            defaultmediaplayer=video/mp4 \
-	            defaultpaint=image/bmp \
-	            defaultpdfviewer=application/pdf \
-	            defaultspreadsheet=application/vnd.oasis.opendocument.spreadsheet \
-	            defaulttexteditor=text/plain \
-	            defaulttextviewer=text/plain \
-	            defaulttorrent=application/x-bittorrent \
-	            defaultwordprocessor=application/vnd.oasis.opendocument.text; do
-		cat << EOF > rootfs-complete/usr/local/bin/${PAIR%=*}
-#!/bin/ash
-exec xdgdefaultapp "${PAIR#*=}" "\$@"
-EOF
-	done
-fi
+done
+echo
 
 [ -n "$QEMU" ] && rm -f rootfs-complete/${QEMU}
 
 if [ "$SDFLAG" != "" -a "$SDFLAG" != "zip" ]; then
+	BUILD_SFS='no'
+elif [ "$CROSFLAG" != "" ]; then
 	BUILD_SFS='no'
 else
 	BUILD_SFS='yes'
@@ -1026,42 +962,27 @@ fi
 
 if [ "$BUILD_SFS" = 'yes' ]; then
 	sh $MWD/support/files2delete.sh rootfs-complete
-	[ "$USR_SYMLINKS" = "yes" ] && usrmerge rootfs-complete 1
-
-	#if [ "$BUILD_BDRV" = 'yes' ]; then
-		#case $DISTRO_BINARY_COMPAT in debian|devuan|ubuntu)
-			#if [ "$ISOFLAG" ]; then
-				#echo "Now building sandbox3/bdrv"
-				#$MWD/support/bdrv.sh || exit 1
-			#fi
-			#;;
-		#esac
-	#fi
-
 	#build the rootfs-complete sfs...
 	echo -e "\nNow building the main f.s., ${PUPPYSFS}..."
 	rm -f build/${PUPPYSFS} 2>/dev/null
 	mksquashfs rootfs-complete build/${PUPPYSFS} ${SFSCOMP} #100911 110713
 	###########
-	#if [ -d bdrv -o -d adrv -o -d fdrv -o -d ydrv ];then
+	if [ -d adrv -o -d fdrv -o -d ydrv ];then
 		#build the {a,f,y}drive sfs...
-		#for SYS_SFS in bdrv adrv fdrv ydrv
-		#do
-			#[ ! -d "$SYS_SFS" ] && echo "no $SYS_SFS" && continue
-			#case $SYS_SFS in
-				#bdrv) TYPE_SYS_SFS="${BDRVSFS}";;
-				#adrv) TYPE_SYS_SFS="${ADRVSFS}";;
-				#fdrv) TYPE_SYS_SFS="${FDRVSFS}";;
-				#ydrv) TYPE_SYS_SFS="${YDRVSFS}";;
-			#esac
-			e#cho -e "\nNow building the $SYS_SFS f.s., $TYPE_SYS_SFS ..."
-			#rm -f build/${TYPE_SYS_SFS} 2>/dev/null
-			#[ -d ${SYS_SFS}/root ] && busybox chmod 700 ${SYS_SFS}/root
-			#[ -d ${SYS_SFS}/home/spot ] && busybox chmod 700 ${SYS_SFS}/home/spot
-			#mksquashfs $SYS_SFS build/${TYPE_SYS_SFS} ${SFSCOMP} #170330
-			#[ -n "$GITHUB_ACTIONS" ] && rm -rf $SYS_SFS
-		#done
-	#fi
+		for SYS_SFS in adrv fdrv ydrv
+		do
+			[ ! -d "$SYS_SFS" ] && echo "no $SYS_SFS" && continue
+			case $SYS_SFS in
+				adrv) TYPE_SYS_SFS="${ADRVSFS}";;
+				fdrv) TYPE_SYS_SFS="${FDRVSFS}";;
+				ydrv) TYPE_SYS_SFS="${YDRVSFS}";;
+			esac
+			echo -e "\nNow building the $SYS_SFS f.s., $TYPE_SYS_SFS ..."
+			rm -f build/${TYPE_SYS_SFS} 2>/dev/null
+			mksquashfs $SYS_SFS build/${TYPE_SYS_SFS} ${SFSCOMP} #170330
+			[ -n "$GITHUB_ACTIONS" ] && rm -rf $SYS_SFS
+		done
+	fi
 	#############
 	# build.conf: ADRV_SFS_URL='..' YDRV_SFS_URL='..' FDRV_SFS_URL='..'
 	for i in \
@@ -1141,9 +1062,8 @@ if [ "$BUILD_DEVX" = "yes" ] ; then
 	done
 
 	echo "Now creating ${DEVXSFS} ..."
-	[ -d sandbox3/devx/root ] && busybox chmod 700 sandbox3/devx/root
-	[ -d sandbox3/devx/home/spot ] && busybox chmod 700 sandbox3/devx/home/spot
 	mksquashfs sandbox3/devx ./sandbox3/${DEVXSFS} ${SFSCOMP} #100911 110713
+	[ -n "$GITHUB_ACTIONS" ] && rm -rf sandbox3/devx
 	chmod 644 ./sandbox3/${DEVXSFS}
 	echo "...done"
 
@@ -1153,7 +1073,7 @@ fi
 #==================================================================================
 # ISO file
 
-if [ "$SDFLAG" = "" ] ; then #120506
+if [ "$SDFLAG" = "" -a "$CROSFLAG" = "" ] ; then #120506
 	if [ "$BUILD_DEVX" = "yes" -a -f ${DEVXSFS} ] ; then
 		if [ "$DEVX_IN_ISO" = "yes" ] ; then #_00build.conf
 			XTRA_FLG="${XTRA_FLG}-devx"
@@ -1172,33 +1092,21 @@ if [ "$SDFLAG" = "" ] ; then #120506
 			mv -f ${DEVXSFS} ../${WOOF_OUTPUT}/
 			( cd ../${WOOF_OUTPUT} ; md5sum ${DEVXSFS} > ${DEVXSFS}.md5.txt )
 		fi
-		if [ -f ${DOCXSFS} -a "$DOCX_IN_ISO" = "yes" ] ; then #_00build.conf
-			XTRA_FLG="${XTRA_FLG}-docx"
-			mv -f ${DOCXSFS} ./build/
-		elif [ -f ${DOCXSFS} ] ; then
+		if [ -f ${DOCXSFS} ] ; then
 			mv -f ${DOCXSFS} ../${WOOF_OUTPUT}/
 			( cd ../${WOOF_OUTPUT} ; md5sum ${DOCXSFS} > ${DOCXSFS}.md5.txt )
 		fi
-		if [ -f ${NLSXSFS} -a "$NLSX_IN_ISO" = "yes" ] ; then #_00build.conf
-			XTRA_FLG="${XTRA_FLG}-nlsx"
-			mv -f ${NLSXSFS} ./build/
-		elif [ -f ${NLSXSFS} ] ; then
+		if [ -f ${NLSXSFS} ] ; then
 			mv -f ${NLSXSFS} ../${WOOF_OUTPUT}/
 			( cd ../${WOOF_OUTPUT} ; md5sum ${NLSXSFS} > ${NLSXSFS}.md5.txt )
-		fi
-		if [ "$KBUILD_IN_ISO" = "yes" ]; then
-			KBUILDSFS="`ls ../kernel-kit/output/kbuild-*.sfs 2>/dev/null`"
-			[ -n "${KBUILDSFS}" ] && cp -f ${KBUILDSFS} ./build/
 		fi
 
 		echo "Running ../support/mk_iso.sh"
 		../support/mk_iso.sh || exit 1
 	else
-		#[ "$BUILD_DEVX" = "yes" -a -f ${DEVXSFS} -a ! -f build/${BDRVSFS} ] && mv -f ${DEVXSFS} ./build/
+		[ "$BUILD_DEVX" = "yes" -a -f ${DEVXSFS} ] && mv -f ${DEVXSFS} ./build/
 		[ -f ${DOCXSFS} ] && mv -f ${DOCXSFS} ./build/
 		[ -f ${NLSXSFS} ] && mv -f ${NLSXSFS} ./build/
-		KBUILDSFS="`ls ../kernel-kit/output/kbuild-*.sfs 2>/dev/null`"
-		[ -n "${KBUILDSFS}" ] && cp -f ${KBUILDSFS} ./build/kbuild_${DISTRO_FILE_PREFIX}_${DISTRO_VERSION}.sfs
 
 		WOOF_OUTPUT="woof-output-${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}"
 		mkdir -p ../$WOOF_OUTPUT
@@ -1258,19 +1166,18 @@ if [ "$SDFLAG" = "zip" ];then
 		fi
 	fi
 	rm -rf tmp/ # we're still in sandbox3
-
+elif [ "$CROSFLAG" ]; then # Chrome OS image
+	WOOF_OUTPUT="woof-output-${DISTRO_FILE_PREFIX}-${DISTRO_VERSION}"
+	mkdir -p ../$WOOF_OUTPUT
+	. ../support/cros_image.sh
 elif [ "$SDFLAG" ]; then #120506 sd image
-
 	# $SD_IMAGE in _00build.conf
 	. ../support/arm_sd_image.sh
-
 fi
-
 if [ -n "$GITHUB_ACTIONS" ]; then
 	rm -rf rootfs-complete
 else
 	beep ; beep ; beep
 fi
 echo -e "\nScript finished."
-
 ###END###
