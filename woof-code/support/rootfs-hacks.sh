@@ -16,11 +16,6 @@ if [ ! -e ${SR}/usr/bin/rxvt-unicode ] && [ -f ${SR}/usr/bin/urxvt ] ; then
 	ln -snfv urxvt ${SR}/usr/bin/rxvt-unicode
 fi
 
-# gtk2dialog symlink
-if [ ! -e ${SR}/usr/sbin/gtk2dialog ] && [ -e ${SR}/usr/sbin/gtkdialog ] ; then
-	ln -snfv gtkdialog ${SR}/usr/sbin/gtk2dialog
-fi
-
 # zenity symlink
 if [ ! -L ${SR}/usr/bin/zenity ] && [ -f ${SR}/usr/bin/yad ] ; then
 	ln -snfv yad ${SR}/usr/bin/zenity
@@ -172,9 +167,8 @@ if [ -f ${SR}/usr/bin/Xorg ] && [ ! -L ${SR}/usr/bin/X ] ; then
 fi
 
 # need a working wget
-if [ -f ${SR}/etc/wgetrc -a ! -f ${SR}/etc/ssl/certs/ca-certificates.crt ] ; then
+if [ -f ${SR}/etc/wgetrc ] ; then
 	if ! grep -q "check_certificate = off" ${SR}/etc/wgetrc ; then
-		echo "WARNING: disabling wget certificate validation"
 		echo "check_certificate = off
 	#ca_certificate = /etc/ssl/certs/ca-certificates.crt
 	continue = on" >> ${SR}/etc/wgetrc
@@ -229,7 +223,6 @@ done
 
 # need to enforce pterminfo: xterm -- see /etc/profile
 if [ -d ${SR}/usr/share/terminfox ] ; then
-	[ -e ${SR}/usr/share/terminfo ] && cp -r ${SR}/usr/share/terminfo/* ${SR}/usr/share/terminfox/
 	rm -rf ${SR}/usr/share/terminfo
 	mv -f ${SR}/usr/share/terminfox ${SR}/usr/share/terminfo
 fi
@@ -245,9 +238,6 @@ fi
 # iptables symlink
 if [ -h ${SR}/usr/sbin/iptables-legacy ] ; then
 	ln -sv /usr/sbin/iptables-legacy ${SR}/usr/sbin/iptables
-fi
-if [ -h ${SR}/usr/sbin/ip6tables-legacy ] ; then
-	ln -sv /usr/sbin/ip6tables-legacy ${SR}/usr/sbin/ip6tables
 fi
 
 echo ----
@@ -270,8 +260,5 @@ if [ -e ${SR}/usr/bin/pmwget ] ; then
 		-e 's%<input file>/usr/local/lib/X11/mini.*%<input file>/usr/share/pixmaps/puppy/apply.svg</input> <height>20</height>%' \
 			${SR}/usr/bin/pmwget
 fi
-
-# if fusermount loses the SUID bit, AppImages don't work as spot
-[ -e ${SR}/bin/fusermount ] && chmod 4755 ${SR}/bin/fusermount
 
 ### END ###
