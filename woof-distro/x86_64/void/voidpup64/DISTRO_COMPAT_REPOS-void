@@ -7,7 +7,8 @@
 #   3 - name of db file when local and after being processed into standard format
 
 PKG_DOCS_DISTRO_COMPAT="
-z|https://repo-fi.voidlinux.org/${DISTRO_COMPAT_VERSION}/${DISTRO_TARGETARCH}-repodata|Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}
+z|http://download.opensuse.org/tumbleweed/repo/oss/ARCHIVES.gz|Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}
+z|http://download.opensuse.org/tumbleweed/repo/non-oss/INDEX.gz|Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}
 "
 
 #-------------------
@@ -19,9 +20,15 @@ z|https://repo-fi.voidlinux.org/${DISTRO_COMPAT_VERSION}/${DISTRO_TARGETARCH}-re
 #   3 - name of db-file(s) associated with that repo. it may have glob wildcards.
 
 REPOS_DISTRO_COMPAT="
-z|https://alpha.de.repo.voidlinux.org|Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}
-z|https://repo-fi.voidlinux.org|Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}
-z|https://repo-us.voidlinux.org|Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}
+z|http://download.opensuse.org/tumbleweed/repo/oss|Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}
+z|http://download.opensuse.org/tumbleweed/repo/non-oss|Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}
+z|http://download.opensuse.org/update/tumbleweed/|Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}
+z|http://download.opensuse.org/repositories/games/openSUSE_Tumbleweed|Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}
+z|http://download.opensuse.org/update/tumbleweed/|Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}
+z|https://en.opensuse.org/Xfce_repositories|Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}
+z|https://en.opensuse.org/LXDE_repositories|Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}
+z|https://en.opensuse.org/GNOME_repositories|Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}
+z|https://en.opensuse.org/KDE_repositories|Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}
 "
 
 
