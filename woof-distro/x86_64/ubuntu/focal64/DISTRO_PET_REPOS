@@ -52,7 +52,7 @@ z|https://raw.githubusercontent.com/puppylinux-woof-CE/woof-CE-noarch/master|Pac
 #   (and third, etc.) for pet pkgs
 
 PACKAGELISTS_PET_ORDER="
-Packages-puppy-${DISTRO_DB_SUBNAME}-official
+Packages-puppy-*-official
 Packages-puppy-common64-official
 Packages-puppy-noarch-official
 Packages-puppy-bionic64-official
