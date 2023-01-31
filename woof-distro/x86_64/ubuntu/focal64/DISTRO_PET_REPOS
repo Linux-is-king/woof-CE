@@ -19,4 +19,4 @@ PET_REPOS='ibiblio.org|http://distro.ibiblio.org/puppylinux|Packages-puppy-*-off
 #this defines where Woof looks first and second (and third, etc.) for pet pkgs
 
 #DISTRO_DB_SUBNAME is 'wary5'...
-PACKAGELISTS_PET_ORDER="Packages-puppy-wary5-official Packages-puppy-noarch-official Packages-puppy-common-official Packages-puppy-4-official"
+PACKAGELISTS_PET_ORDER="Packages-puppy-wary5-official Packages-puppy-noarch-official Packages-puppy-common-official Packages-puppy-wary5-officialOLD "
