@@ -1,15 +1,3 @@
-
-puppylinux-woof-CE
-/
-woof-CE
-Public
-Code
-Issues
-97
-Pull requests
-23
-Discussions
-Actions
 #w469 fallbacks when looking for pet pkgs (space-separated list)...
 FALLBACKS_COMPAT_VERSIONS='wary5 8.0rcXorg7.3 8.0rc'
 
