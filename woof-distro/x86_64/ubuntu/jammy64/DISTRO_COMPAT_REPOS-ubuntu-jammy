@@ -25,13 +25,13 @@ esac
 #   3 - name of db file when local and after being processed into standard format
 
 PKG_DOCS_DISTRO_COMPAT="
-z|http://download.opensuse.org/tumbleweed/repo/oss/x86_64/||
-z|http://download.opensuse.org/tumbleweed/repo/non-oss/x86_64/||
-z|http://download.opensuse.org/tumbleweed/repo/oss/boot/x86_64/||
-z|http://download.opensuse.org/tumbleweed/repo/oss/noarch/||
-z|http://download.opensuse.org/tumbleweed/repo/oss/EFI/BOOT/||
-z|http://download.opensuse.org/tumbleweed/repo/non-oss/x86_64/||
-z|http://download.opensuse.org/tumbleweed/repo/non-oss/noarch/||
+z|http://download.opensuse.org/tumbleweed/repo/oss/x86_64/|http://download.opensuse.org/tumbleweed/repo/oss/INDEX.gz|.rpm
+z|http://download.opensuse.org/tumbleweed/repo/non-oss/x86_64/|http://download.opensuse.org/tumbleweed/repo/non-oss/INDEX.gz|.rpm
+z|http://download.opensuse.org/tumbleweed/repo/oss/boot/x86_64/||.rpm
+z|http://download.opensuse.org/tumbleweed/repo/oss/noarch/||.rpm
+z|http://download.opensuse.org/tumbleweed/repo/oss/EFI/BOOT/||.rpm
+z|http://download.opensuse.org/tumbleweed/repo/non-oss/x86_64/||.rpm
+z|http://download.opensuse.org/tumbleweed/repo/non-oss/noarch/||.rpm
 "
 
 #-------------------
@@ -43,13 +43,13 @@ z|http://download.opensuse.org/tumbleweed/repo/non-oss/noarch/||
 #   3 - name of db-file(s) associated with that repo. it may have glob wildcards.
 
 REPOS_DISTRO_COMPAT="
-z|http://download.opensuse.org/tumbleweed/repo/oss/x86_64/*
-z|http://download.opensuse.org/tumbleweed/repo/non-oss/x86_64/*
-z|http://download.opensuse.org/tumbleweed/repo/oss/boot/x86_64/*
-z|http://download.opensuse.org/tumbleweed/repo/oss/noarch/*
-z|http://download.opensuse.org/tumbleweed/repo/oss/EFI/BOOT/*
-z|http://download.opensuse.org/tumbleweed/repo/non-oss/x86_64/*
-z|http://download.opensuse.org/tumbleweed/repo/non-oss/noarch/*
+z|http://download.opensuse.org/tumbleweed/repo/oss/x86_64/*|http://download.opensuse.org/tumbleweed/repo/oss/INDEX.gz|.rpm
+z|http://download.opensuse.org/tumbleweed/repo/non-oss/x86_64/*|http://download.opensuse.org/tumbleweed/repo/non-oss/INDEX.gz|.rpm
+z|http://download.opensuse.org/tumbleweed/repo/oss/boot/x86_64/*||.rpm
+z|http://download.opensuse.org/tumbleweed/repo/oss/noarch/*||.rpm
+z|http://download.opensuse.org/tumbleweed/repo/oss/EFI/BOOT/*||.rpm
+z|http://download.opensuse.org/tumbleweed/repo/non-oss/x86_64/*||.rpm
+z|http://download.opensuse.org/tumbleweed/repo/non-oss/noarch/*||.rpm
 "
 
 
