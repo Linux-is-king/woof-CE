@@ -32,6 +32,11 @@ z|https://raw.githubusercontent.com/puppylinux-woof-CE/woof-CE/testing/woof-dist
 #   ex: Packages-puppy-4-official (note, url paths are in the database)
 
 PET_REPOS='
+z|http://distro.ibiblio.org/puppylinux/pet_packages-slacko6414.1/|slacko6414.1
+z|http://distro.ibiblio.org/puppylinux/pet_packages-slacko6414/|slacko6414
+z|http://distro.ibiblio.org/puppylinux/pet_packages-slacko6415.0/|slacko6415.0
+z|http://distro.ibiblio.org/puppylinux/Packages-puppy-wary5-official|Packages-puppy-wary5-official
+z|http://distro.ibiblio.org/puppylinux/Packages-puppy-5-official|Packages-puppy-5-official
 z|http://distro.ibiblio.org/puppylinux|Packages-puppy-*-official
 z|http://ftp.nluug.nl/ftp/pub/os/Linux/distr/puppylinux|Packages-puppy-*-official
 z|http://ftp.cc.uoc.gr/mirrors/linux/puppylinux|Packages-puppy-*-official
@@ -52,12 +57,17 @@ z|https://raw.githubusercontent.com/puppylinux-woof-CE/woof-CE-noarch/master|Pac
 #   (and third, etc.) for pet pkgs
 
 PACKAGELISTS_PET_ORDER="
-Packages-puppy-*-official
 Packages-puppy-common64-official
 Packages-puppy-noarch-official
+slacko6415.0
+slacko6414
+slacko6414.1
 Packages-puppy-bionic64-official
 Packages-puppy-xenial64-official
 Packages-puppy-tahr64-official
+Packages-puppy-wary5-official
+Packages-puppy-5-official
+Packages-puppy-4-official
 "
 
 #---------------
