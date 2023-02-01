@@ -21,7 +21,7 @@ esac
 #   3 - name of db file when local and after being processed into standard format
 
 PKG_DOCS_DISTRO_COMPAT="
-z|http://download.opensuse.org/tumbleweed/repo/oss/ARCHIVES.${DDB_COMP}|Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}
+z|http://download.opensuse.org/tumbleweed/repo/oss/INDEX.${DDB_COMP}|Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}
 z|http://download.opensuse.org/tumbleweed/repo/non-oss/INDEX..${DDB_COMP}|Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}
 "
 
