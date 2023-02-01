@@ -22,7 +22,7 @@ esac
 
 PKG_DOCS_DISTRO_COMPAT="
 z|http://download.opensuse.org/tumbleweed/repo/oss/INDEX.${DDB_COMP}|Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}
-z|http://download.opensuse.org/tumbleweed/repo/non-oss/INDEX..${DDB_COMP}|Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}
+z|http://download.opensuse.org/tumbleweed/repo/non-oss/INDEX.${DDB_COMP}|Packages-${DISTRO_BINARY_COMPAT}-${DISTRO_COMPAT_VERSION}
 "
 
 #-------------------
