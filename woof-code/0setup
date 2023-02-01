@@ -325,9 +325,6 @@ do
   void)
 	support/void/void0setup
    ;;
-  opensuse)
-   echo "...it's already in the Puppy standard format."
-  ;;
   puppy)
    echo "...it's already in the Puppy standard format."
   ;;
