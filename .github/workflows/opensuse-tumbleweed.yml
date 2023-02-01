@@ -1,4 +1,4 @@
-name: opensuse-tumbleweed
+name: t2-april
 
 on:
   schedule:
@@ -10,10 +10,10 @@ jobs:
       matrix:
         include:
           - arch: x86_64
-            compat-distro-version: tumbleweed
+            compat-distro-version: april
             kernel: 5.15.x
           - arch: x86
-            compat-distro-version: tumbleweed
+            compat-distro-version: april
             kernel: 5.10.x
     if: github.repository == 'puppylinux-woof-CE/woof-CE'
     uses: ./.github/workflows/build.yml
