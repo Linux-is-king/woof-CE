@@ -21,8 +21,8 @@ jobs:
       repo: ${{ github.repository }}
       ref: ${{ github.ref }}
       arch: ${{ matrix.arch }}
-      compat-distro: opensuse
+      compat-distro: t2
       compat-distro-version: ${{ matrix.compat-distro-version }}
       kernel: ${{ matrix.kernel }}
-      artifact: void-${{ matrix.compat-distro-version }}-${{ github.run_number }}
+      artifact: t2-${{ matrix.compat-distro-version }}-${{ github.run_number }}
       retention: 16
