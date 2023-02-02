@@ -208,7 +208,11 @@ EOF
    fi
  fi
 fi
-
+if [ -f ./support/rpm2ppm ];then #110612
+ RPM2PPM='./support/rpm2ppm'
+else
+ RPM2PPM='/usr/local/petget/rpm2ppm' #see 3builddistro.
+fi
 case $DISTRO_BINARY_COMPAT in slackware*) # slackware official updates = patches repo
    DBUPDATEFLAG='yes'
    PKGLISTS_COMPAT_U=$(echo "$PKG_DOCS_DISTRO_COMPAT" | tr ' ' '\n' | grep official | \
