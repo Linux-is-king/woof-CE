@@ -40,7 +40,7 @@ no|alsaequal|libasound2-plugin-equal,caps|exe,dev,doc,nls| #needed by pequalizer
 yes|alsa-lib|libasound2,libasound2-data,libasound2-dev,alsa-topology-conf,alsa-ucm-conf|exe,dev,doc,nls||deps:yes
 yes|libasound2-plugins-pulseonly|libasound2-plugins|exe,dev,doc,nls
 yes|alsa-utils|alsa-utils|exe,dev,doc,nls||deps:yes
-yes|apt|apt|exe,dev,doc,nls||deps:yes
+no|apt|apt|exe,dev,doc,nls||deps:yes
 no|apulse||exe,dev,doc
 no|aspell|libaspell15,libaspell-dev|exe,dev,doc,nls #needed by abiword.
 yes|atk|libatk1.0-0,libatk1.0-dev|exe,dev,doc,nls||deps:yes
@@ -163,7 +163,7 @@ yes|galculator|galculator|exe,dev>null,doc,nls||deps:yes
 no|gamin|gamin,libgamin0,libgamin-dev|exe,dev,doc,nls
 yes|gawk|gawk|exe,dev>null,doc,nls||deps:yes
 yes|gcc_dev|gcc,g++|exe>dev,dev,doc,nls||deps:yes #cloog-isl removed
-yes|gcc_lib|libgcc-s1,libgomp1,libquadmath0|exe,dev,doc,nls||deps:yes #libcloog-isl4 and libisl15 removed for Bullseye
+yes|gcc_lib|libc6,libgcc-s1,libgomp1,libquadmath0|exe,dev,doc,nls||deps:yes #libcloog-isl4 and libisl15 removed for Bullseye
 no|gconf|gconf2-common,gconf2,libgconf-2-4,libgconf2-dev,libgconf-2-4,gconf-service|exe,dev,doc,nls||deps:yes
 yes|gdb|gdb,libboost-regex1.74.0|exe>dev,dev,doc,nls||deps:yes
 yes|gdbm|libgdbm6|exe,dev,doc,nls||deps:yes
