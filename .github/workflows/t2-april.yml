@@ -1,4 +1,4 @@
-name: t2-april
+name: opensuse-tumbleweed
 
 on:
   schedule:
@@ -10,10 +10,10 @@ jobs:
       matrix:
         include:
           - arch: x86_64
-            compat-distro-version: april
+            compat-distro-version: tumbleweed
             kernel: 5.15.x
           - arch: x86
-            compat-distro-version: april
+            compat-distro-version: tumbleweed
             kernel: 5.10.x
     if: github.repository == 'puppylinux-woof-CE/woof-CE'
     uses: ./.github/workflows/build.yml
@@ -21,8 +21,8 @@ jobs:
       repo: ${{ github.repository }}
       ref: ${{ github.ref }}
       arch: ${{ matrix.arch }}
-      compat-distro: t2
+      compat-distro: opensuse
       compat-distro-version: ${{ matrix.compat-distro-version }}
       kernel: ${{ matrix.kernel }}
-      artifact: t2-${{ matrix.compat-distro-version }}-${{ github.run_number }}
+      artifact: opensuse-${{ matrix.compat-distro-version }}-${{ github.run_number }}
       retention: 16
