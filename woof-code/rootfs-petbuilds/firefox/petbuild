@@ -1,0 +1,28 @@
+download() {
+    [ -f firefox-109.0.tar.bz2] || wget -t 3 -T 60 https://download-installer.cdn.mozilla.net/pub/firefox/releases/109.0/linux-x86_64/en-US/firefox-109.0.tar.bz2
+
+}
+
+build() {
+    tar -xjf firefox-109.0.tar.bz2
+    mv firefox/ /opt/
+
+    ln -fs /opt/firefox/firefox /usr/bin/firefox
+    ln -s /opt/firefox/browser/chrome/icons/default/default16.png /usr/share/icons/firefox16.png
+    ln -s /opt/firefox/browser/chrome/icons/default/default32.png /usr/share/icons/firefox32.png
+    ln -s /opt/firefox/browser/chrome/icons/default/default48.png /usr/share/icons/firefox48.png
+    ln -s /opt/firefox/browser/icons/default128.png /usr/share/icons/firefox128.png
+    ln -s /usr/share/icons/firefox128.png /usr/share/pixmaps/firefox.png
+
+    echo '[Desktop Entry]
+Encoding=UTF-8
+Name=Firefox
+Comment=Firefox web browser
+GenericName=Firefox web browser
+Keywords=Internet;WWW;Browser;Web;Explorer
+Exec=firefox
+Terminal=false
+Type=Application
+Icon=firefox
+Categories=X-Internet-browser' > /usr/share/applications/firefox.desktop
+}
