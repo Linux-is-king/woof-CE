@@ -15,4 +15,3 @@ DISTRO_DB_SUBNAME='jammy64'
 #multiarch distros, such as Ubuntu, will have this. ex: /usr/lib/i386-linux-gnu, so DISTRO_ARCHDIR=i386-linux-gnu
 DISTRO_TARGETARCH='x86_64'
 NO_MULTIARCH_SYMLINK=1
-BUILD_FROM_WOOF='testing;894a651;2023-01-31 23:59:55 +1000'
