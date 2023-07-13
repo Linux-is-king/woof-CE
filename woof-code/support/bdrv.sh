@@ -6,9 +6,8 @@
 
 debootstrap=`command -v debootstrap || :`
 if [ -z "$debootstrap" ]; then
-	echo -n "WARNING: debootstrap is missing. Press ENTER to continue build without apt support or CTRL-C to abort the build: "
+	echo "WARNING: debootstrap is missing"
 	[ -z "$GITHUB_ACTIONS" ] || exit 1
-	read isitbad
 	exit 0
 fi
 
@@ -61,51 +60,25 @@ cat /etc/resolv.conf > bdrv/etc/resolv.conf
 # configure the package manager
 case "$DISTRO_BINARY_COMPAT" in
 debian)
-	case "$DISTRO_COMPAT_VERSION" in
-	sid)
-		cat << EOF > bdrv/etc/apt/sources.list
-deb ${MIRROR} ${DISTRO_COMPAT_VERSION} main contrib non-free non-free-firmware
-EOF
-		;;
-	stretch|buster|bullseye)
-		cat << EOF > bdrv/etc/apt/sources.list
-deb ${MIRROR} ${DISTRO_COMPAT_VERSION} main contrib non-free
+	echo "deb ${MIRROR} ${DISTRO_COMPAT_VERSION} main contrib non-free" > bdrv/etc/apt/sources.list
+
+	if [ "$DISTRO_COMPAT_VERSION" != "sid" ]; then
+		cat << EOF >> bdrv/etc/apt/sources.list
 deb ${MIRROR} ${DISTRO_COMPAT_VERSION}-updates main contrib non-free
 deb ${MIRROR}-security ${DISTRO_COMPAT_VERSION}-security main contrib non-free
 EOF
-		;;
-	*)
-		cat << EOF > bdrv/etc/apt/sources.list
-deb ${MIRROR} ${DISTRO_COMPAT_VERSION} main contrib non-free non-free-firmware
-deb ${MIRROR} ${DISTRO_COMPAT_VERSION}-updates main contrib non-free non-free-firmware
-deb ${MIRROR}-security ${DISTRO_COMPAT_VERSION}-security main contrib non-free non-free-firmware
-EOF
-		;;
-	esac
+	fi
 	;;
 
 devuan)
-	case "$DISTRO_COMPAT_VERSION" in
-	ceres)
-		cat << EOF > bdrv/etc/apt/sources.list
-deb ${MIRROR} ${DISTRO_COMPAT_VERSION} main contrib non-free non-free-firmware
-EOF
-		;;
-	ascii|beowulf|chimaera)
-		cat << EOF > bdrv/etc/apt/sources.list
-deb ${MIRROR} ${DISTRO_COMPAT_VERSION} main contrib non-free
+	echo "deb ${MIRROR} ${DISTRO_COMPAT_VERSION} main contrib non-free" > bdrv/etc/apt/sources.list
+
+	if [ "$DISTRO_COMPAT_VERSION" != "ceres" ]; then
+		cat << EOF >> bdrv/etc/apt/sources.list
 deb ${MIRROR} ${DISTRO_COMPAT_VERSION}-updates main contrib non-free
 deb ${MIRROR} ${DISTRO_COMPAT_VERSION}-security main contrib non-free
 EOF
-		;;
-	*)
-		cat << EOF > bdrv/etc/apt/sources.list
-deb ${MIRROR} ${DISTRO_COMPAT_VERSION} main contrib non-free non-free-firmware
-deb ${MIRROR} ${DISTRO_COMPAT_VERSION}-updates main contrib non-free non-free-firmware
-deb ${MIRROR} ${DISTRO_COMPAT_VERSION}-security main contrib non-free non-free-firmware
-EOF
-		;;
-	esac
+	fi
 	;;
 
 ubuntu)

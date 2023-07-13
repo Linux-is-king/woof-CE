@@ -17,7 +17,7 @@ build() {
 Name=gMeasures
 Comment=Weights and measures converter
 Exec=gmeasures
-Icon=calculator
+Icon=currency_dollar
 Terminal=false
 Type=Application
 Categories=Calculator

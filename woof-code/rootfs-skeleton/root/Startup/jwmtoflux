@@ -1,0 +1,123 @@
+#!/bin/bash
+# convert puppy linux .jwmrc to fluxbox menu style
+# April 12, 2013 Seaside
+#added to in Jan 25, 2023 by John Adams. GPL 2.0
+cd /root/.fluxbox/
+     flux="$flux
+ [begin] (JumpPup)"
+while read LINE ; do
+
+[[ "$LINE" == \</RootMenu* ]] && break
+
+if [[ "$LINE" == *label=* || "$LINE" == \</Menu\> || "$LINE" == \<Separator* ]]; then
+	name=${LINE#*label=\"} name=${name%\" icon*}
+	icon=${LINE#*icon=\"} icon=${icon%%\"*}
+	ex=${LINE#*>}  ex=${ex%%<*}
+
+    [[ ! "$icon" == */* ]]  &&  icon=`find /usr -name "$icon"  -print -quit` 
+ case $LINE in 
+   \<Menu*) 
+     flux="$flux
+ [submenu] ("$name") <"$icon"> "
+     ;;
+     
+   \<Program*) 
+     flux="$flux
+     [exec] ("$name") {"$ex"} <"$icon">"
+     ;;
+     
+     \</Menu\>) 
+      flux="$flux
+ [end]"
+ 
+      ;;
+     \<Separator*) 
+      flux="$flux
+   [separator]" 
+      ;;
+      
+ esac
+ 
+
+fi
+[end]="$flux
+"
+\
+[endencoding]="$flux
+"
+\
+[end] ="$flux
+"
+\
+done </root/.jwmrc
+       flux="$flux
+[submenu] (Fluxbox menu)"
+\
+ flux="$flux
+      [config] (Configure)"
+\
+ flux="$flux
+[submenu] (System Styles) {Choose a style...}"
+\
+ flux="$flux
+      [stylesdir] (/usr/share/fluxbox/styles)"
+\
+ flux="$flux
+[end]"
+\
+ flux="$flux
+[submenu] (User Styles) {Choose a style...}"
+\
+ flux="$flux
+      [stylesdir] (~/.fluxbox/styles)"
+\
+ flux="$flux
+[end]"
+\
+ flux="$flux
+      [workspaces] (Workspace List)"
+\
+ flux="$flux 
+[submenu] (Tools)"
+\
+ flux="$flux
+      [exec] (Window name) {xprop WM_CLASS|cut -d \" -f 2|gxmessage -file - -center}"
+\
+ flux="$flux 
+      [exec] (Run) {fbrun}"
+      \
+ flux="$flux 
+      [exec] (Regen Menu) {jwmtoflux}"
+      \
+ flux="$flux 
+[end]"
+\
+ flux="$flux
+      [exec] (Lock screen) {xlock}"
+      \
+ flux="$flux
+      [commanddialog] (Fluxbox Command)"
+      \
+ flux="$flux 
+      [reconfig] (Reload config)"
+     # \
+# flux="$flux 
+      #[restart] (Restart)" left out to leave only one "exit" ( make sure the save funiction works)
+      \
+ flux="$flux 
+      [exec] (About) {(fluxbox -v; fluxbox -info | sed 1d) | gxmessage -file - -center}"
+      \
+ flux="$flux 
+      [separator]"
+      \
+ #flux="$flux removed for simplicty of having a single exit/ shut off option to help keep puppy more stable .... 
+      #[exit] (Exit)" 
+      flux="$flux
+ [end]"
+       flux="$flux
+ [endencoding]"
+       flux="$flux
+ [end]"
+
+echo "$flux" >menu
+

@@ -28,7 +28,7 @@ FALLBACKS_COMPAT_VERSIONS=''
 # http://bkhome.org/blog/?viewDetailed=02414
 
 PKGS_SPECS_TABLE='
-yes|abiword-deps|libboost-dev,libwv-dev,libenchant-2-dev|exe,dev,doc,nls||deps:yes
+yes|abiword-deps|libboost-dev,libwv-dev|exe,dev,doc,nls||deps:yes
 no|a52dec|liba52-0.7.4,liba52-0.7.4-dev|exe,dev,doc,nls
 no|aalib|libaa1|exe,dev>null,doc,nls #ascii library, needed by mplayer, gphoto
 yes|acl|libacl1|exe,dev,doc,nls||deps:yes
@@ -40,6 +40,7 @@ no|alsaequal|libasound2-plugin-equal,caps|exe,dev,doc,nls| #needed by pequalizer
 yes|alsa-lib|libasound2,libasound2-data,libasound2-dev,alsa-topology-conf,alsa-ucm-conf|exe,dev,doc,nls||deps:yes
 yes|libasound2-plugins-pulseonly|libasound2-plugins|exe,dev,doc,nls
 yes|alsa-utils|alsa-utils|exe,dev,doc,nls||deps:yes
+no|apt|apt|exe,dev,doc,nls||deps:yes
 no|apulse||exe,dev,doc
 no|aspell|libaspell15,libaspell-dev|exe,dev,doc,nls #needed by abiword.
 yes|atk|libatk1.0-0,libatk1.0-dev|exe,dev,doc,nls||deps:yes
@@ -74,7 +75,6 @@ yes|ccache|ccache|exe>dev,dev,doc,nls||deps:yes
 no|cdparanoia|cdparanoia,libcdparanoia0,libcdparanoia-dev|exe,dev,doc,nls
 no|cgpt|cgpt|exe>dev,dev,doc,nls||deps:yes
 no|cifs-utils|cifs-utils|exe,dev,doc,nls
-yes|claws-mail-deps|libetpan-dev|exe,dev,doc,nls||deps:yes
 yes|connman|connman|exe,dev,doc,nls||deps:yes
 no|copy-fast||exe,doc,nls
 yes|coreutils|coreutils|exe,dev,doc,nls||deps:yes
@@ -83,10 +83,10 @@ no|colord|libcolord2,libcolord-dev|exe,dev,doc,nls #needed by gtk+3.
 yes|cpio|cpio|exe,dev>null,doc,nls||deps:yes
 yes|cpp|cpp|exe,dev>exe,doc,nls||deps:yes # needed by x11-xserver-utils
 yes|crda|wireless-regdb|exe,dev,doc,nls||deps:yes
-yes|cryptsetup|cryptsetup-bin|exe,dev,doc,nls||deps:yes
 no|ctorrent|ctorrent|exe,dev>null,doc,nls
 no|cryptsetup||exe # must use wce static binary
-yes|cups|cups,cups-bsd,printer-driver-cups-pdf,foomatic-db-compressed-ppds,libcups2-dev|exe,dev,doc,nls||deps:yes
+no|cups|cups-bsd,cups,cups-common,cups-core-drivers,cups-server-common,cups-client,cups-ppdc,libcups2,libcups2-dev,libcupsimage2,libcupsimage2-dev,cups-daemon|exe,dev,doc,nls
+no|cups-filters|cups-filters,cups-filters-core-drivers,libcupsfilters1,libcupsfilters-dev,libfontembed1,libfontembed-dev|exe,dev,doc,nls #extra cups filters, especially pdftops.
 yes|curl|curl,libcurl4,libcurl4-openssl-dev|exe,dev,doc,nls||deps:yes
 no|cvs|cvs|exe>dev,dev,doc,nls
 yes|cyrus-sasl2|libsasl2-2|exe,dev,doc,nls||deps:yes
@@ -95,7 +95,7 @@ yes|dbus|dbus,dbus-x11,libdbus-1-3,libdbus-1-dev,libapparmor1|exe,dev,doc,nls||d
 no|dbus-glib|libdbus-glib-1-2|exe,dev,doc,nls||deps:yes
 yes|dbus-user-session|dbus-user-session|exe>null,dev>null,doc>null,nls>null
 yes|d-conf|dconf-gsettings-backend,dconf-service,libdconf1|exe,dev,doc,nls||deps:yes #needed by gsettings-desktop-settings
-yes|deadbeef-deps|libjansson-dev,libmpg123-dev,libcddb2-dev,libcdio-paranoia-dev|exe,dev,doc,nls||deps:yes
+yes|deadbeef-deps|libjansson-dev|exe,dev,doc,nls||deps:yes
 yes|debconf|debconf|exe,dev,doc,nls
 yes|debianutils|debianutils|exe,dev,doc,nls||deps:yes
 no|debootstrap|debootstrap|exe>dev,dev,doc,nls||deps:yes
@@ -125,10 +125,11 @@ yes|efibootmgr|efibootmgr|exe,dev,doc,nls||deps:yes
 no|edid|read-edid|exe,dev>null,doc,nls
 yes|eject|eject|exe,dev>null,doc,nls||deps:yes
 no|elfutils|elfutils,libasm1,libasm-dev,libdw1,libdw-dev,libelf1,libelf-dev|exe,dev,doc,nls #note, libelf is a different pkg.
-yes|epdfview-deps|libpoppler-glib-dev|exe,dev,doc,nls||deps:yes
+no|enchant|libenchant1c2a,libenchant-dev|exe,dev,doc,nls
 yes|ethtool|ethtool|exe,dev>null,doc,nls||deps:yes
+yes|evince|evince|exe,dev>null,doc,nls||deps:yes #PDF and postscript viewer
 no|exiv2|exiv2,libexiv2-14,libexiv2-dev|exe,dev,doc,nls
-yes|exfatprogs|exfatprogs|exe,dev,doc,nls||deps:yes
+no|exfat|exfat-fuse,exfat-utils|exe,dev,doc,nls #requires fuse
 yes|expat|libexpat1,libexpat1-dev|exe,dev,doc,nls||deps:yes
 yes|f2fs-tools|f2fs-tools|exe,dev,doc,nls||deps:yes
 no|faac|libfaac0|exe,dev,doc,nls
@@ -142,6 +143,8 @@ no|firmware_linux_module_b43||exe| #120919 have taken these out of woof, now pet
 no|firmware_linux_module_b43legacy||exe
 yes|flac|libflac8|exe,dev,doc,nls||deps:yes
 yes|flex|flex|exe>dev,dev,doc,nls||deps:yes
+no|foomatic-db-engine|foomatic-db-engine|exe,dev,doc,nls
+no|foomatic-filters|foomatic-filters|exe,dev,doc,nls
 yes|fonts-liberation2|fonts-liberation2|exe,dev,doc,nls||deps:yes
 yes|fonts-noto-color-emoji|fonts-noto-color-emoji|exe,dev,doc,nls||deps:yes
 yes|fonts-noto-core|fonts-noto-core|exe>nls,dev>nls,doc,nls||deps:yes
@@ -160,7 +163,7 @@ yes|galculator|galculator|exe,dev>null,doc,nls||deps:yes
 no|gamin|gamin,libgamin0,libgamin-dev|exe,dev,doc,nls
 yes|gawk|gawk|exe,dev>null,doc,nls||deps:yes
 yes|gcc_dev|gcc,g++|exe>dev,dev,doc,nls||deps:yes #cloog-isl removed
-yes|gcc_lib|libgcc-s1,libgomp1,libquadmath0|exe,dev,doc,nls||deps:yes #libcloog-isl4 and libisl15 removed for Bullseye
+yes|gcc_lib|libc6,libgcc-s1,libgomp1,libquadmath0|exe,dev,doc,nls||deps:yes #libcloog-isl4 and libisl15 removed for Bullseye
 no|gconf|gconf2-common,gconf2,libgconf-2-4,libgconf2-dev,libgconf-2-4,gconf-service|exe,dev,doc,nls||deps:yes
 yes|gdb|gdb,libboost-regex1.74.0|exe>dev,dev,doc,nls||deps:yes
 yes|gdbm|libgdbm6|exe,dev,doc,nls||deps:yes
@@ -205,8 +208,8 @@ yes|graphite2|libgraphite2-3,libgraphite2-dev|exe,dev,doc,nls||deps:yes #needed 
 yes|grep|grep|exe,dev>null,doc,nls||deps:yes
 yes|groff|groff,groff-base|exe,dev,doc,nls||deps:yes
 no|grsync||exe,dev,doc,nls
-no|grub2_efi||exe
-no|grub4dos||exe,dev>null,doc,nls
+no|grub2_efi||exe #jma-y
+yes|grub4dos||exe,dev>null,doc,nls #jma-y
 yes|gsettings-desktop-schemas|gsettings-desktop-schemas|exe,dev,doc,nls||deps:yes #needs d-conf.
 no|gsm|libgsm1,libgsm1-dev|exe,dev,doc,nls
 no|gstreamer1|libgstreamer1.0-0,libgstreamer-plugins-base1.0-0|exe,dev,doc,nls
@@ -232,7 +235,7 @@ no|gview||exe,dev,dev>null,doc,nls
 no|gwhere||exe,dev,dev>null,doc,nls
 no|gxmessage||exe #use my pet, as has xmessage symlink to gxmessage.
 no|gzip|gzip|exe,dev>null,doc,nls||deps:yes
-yes|hardinfo-deps|libjson-glib-dev|exe,dev,doc,nls||deps:yes
+no|hardinfo|hardinfo|exe,dev #our pet is patched to recognise puppy linux distro.
 yes|harfbuzz|libharfbuzz0b,libharfbuzz-dev|exe,dev,doc,nls||deps:yes
 yes|hdparm|hdparm|exe,dev>null,doc,nls||deps:yes
 no|heimdal|heimdal-dev,heimdal-multidev,libasn1-8-heimdal,libsl0-heimdal,libgssapi3-heimdal,libhcrypto4-heimdal,libhdb9-heimdal,libheimbase1-heimdal,libhx509-5-heimdal,libkadm5clnt7-heimdal,libkadm5srv8-heimdal,libkafs0-heimdal,libkdc2-heimdal,libkrb5-26-heimdal,libwind0-heimdal,libroken18-heimdal,libheimntlm0-heimdal|exe,dev,doc,nls||deps:yes #all this crap needed by cupsd.
@@ -269,7 +272,7 @@ yes|krb5|libkrb5-3,libkrb5support0,libk5crypto3,libgssapi-krb5-2|exe,dev,doc,nls
 no|lame|lame,libmp3lame0,libmp3lame-dev|exe,dev,doc,nls
 no|lcms|liblcms2-2,liblcms2-dev,liblcms2-utils|exe,dev,doc,nls
 no|lcms2|liblcms2-2,liblcms2-dev,liblcms2-utils|exe,dev,doc,nls
-#yes|leafpad|leafpad|exe,dev>null,doc,nls
+no|leafpad|leafpad|exe,dev>null,doc,nls #jma-y
 yes|less|less|exe,dev>null,doc,nls||deps:yes
 no|libaacs|libaacs0,libaacs-dev|exe,dev,doc,nls #mplayer needs this.
 no|libao|libao4,libao-common,libao-dev|exe,dev,doc,nls||deps:yes
@@ -280,6 +283,7 @@ no|libart|libart-2.0-2,libart-2.0-dev|exe,dev,doc,nls
 yes|libasyncns|libasyncns0|exe,dev,doc,nls||deps:yes #needed by mplayer.
 no|libayatana|libayatana-appindicator3-1,libayatana-indicator3-7,libayatana-indicator7,libayatana-appindicator3-dev,libayatana-ido3-0.4-0,libayatana-ido3-dev|exe,dev,doc,nls
 no|libb2-1|libb2-1,libb2-dev|exe,dev,doc,nls>nul
+no|libbluray|libbluray2,libbluray-dev|exe,dev,doc,nls #needed by mplayer.
 no|libbonobo|libbonobo2-0,libbonobo2-dev,libbonoboui2-0,libbonoboui2-dev|exe,dev,doc,nls
 no|libboost-filesystem|libboost-filesystem1.67.0,libboost-filesystem1.67-dev|exe,dev,doc,nls
 no|libboost-system|libboost-system1.67.0,libboost-system1.67-dev|exe,dev,doc,nls
@@ -287,6 +291,8 @@ yes|libbsd|libbsd0|exe,dev,doc,nls||deps:yes #needed by libedit.
 yes|libcanberra|libcanberra0,libcanberra-dev,libcanberra-gtk3-0,libcanberra-gtk3-dev|exe,dev,doc,nls||deps:yes #libbonobui needs this.
 yes|libcap|libcap2|exe,dev,doc,nls||deps:yes
 yes|libcap-ng|libcap-ng0|exe,dev,doc,nls||deps:yes
+no|libcddb|libcddb2,libcddb2-dev|exe,dev,doc,nls #debian/ubuntu pkg missing cddb_query, also very old version (warning: .deb cddb package has nothing to do with libcddb pkg). 120907 yes.
+no|libcdio|libcdio18,libcdio-dev,libcdio-cdda2,libcdio-cdda-dev,libcdio-paranoia2,libcdio-paranoia-dev,libcdio-utils,libiso9660-*,libiso9660-dev,libudf0,libudf-dev|exe,dev,doc,nls #not compatible with my libcddb pet, use my pet. 120907 yes.
 no|libcdk5|libcdk5nc6,libcdk5-dev|exe,dev,doc,nls
 no|libcroco|libcroco3,libcroco3-dev|exe,dev,doc,nls
 yes|libbrotli|libbrotli1,libbrotli-dev|exe,dev,doc,nls||deps:yes
@@ -302,12 +308,15 @@ no|libdca|libdca0,libdca-dev|exe,dev,doc,nls #mplayer needs this.
 no|libdeflate|libdeflate0|exe,dev,doc,nls||deps:yes
 no|libdmx|libdmx1,libdmx-dev|exe,dev,doc,nls||deps:yes #this is actaully part of xorg.
 no|libdvdcss||exe,dev,doc,nls
-no|libdw|libdw1|exe,dev,doc,nls||deps:yes #needed by gnome-software
+no|libdvdnav|libdvdnav4|exe,dev,doc,nls #needed by mplayer.
+no|libdvdread|libdvdread4,libdvdread-dev|exe,dev,doc,nls
+yes|libdw|libdw1|exe,dev,doc,nls||deps:yes #needed by gnome-software
 yes|libedit|libedit2|exe,dev,doc,nls||deps:yes
 yes|libelf|libelf1,libelf-dev|exe,dev,doc,nls||deps:yes
 no|libenca|libenca0,libenca-dev|exe,dev,doc,nls
 yes|liberror-perl|liberror-perl|exe>dev,dev,doc,nls||deps:yes #needed by git.
 yes|libevdev|libevdev2,libevdev-dev|exe,dev,doc,nls||deps:yes
+yes|libevent|libevent-2.1-7,libevent-dev|exe,dev,doc,nls||deps:yes #needed by transmission.
 no|libexif|libexif12,libexif-dev|exe,dev,doc,nls
 no|libexif-gtk|libexif-gtk5,libexif-gtk-dev|exe,dev,doc,nls
 no|libf2fs|libf2fs5,libf2fs-dev|exe,dev,doc,nls
@@ -355,6 +364,7 @@ yes|libmnl|libmnl0|exe,dev,doc,nls||deps:yes
 no|libmpcdec|libmpcdec6,libmpcdec-dev|exe,dev,doc,nls
 yes|libmpfr|libmpfr6|exe,dev,doc,nls||deps:yes
 no|libmtp||exe,dev,doc,nls #pupmtp
+yes|libnatpmp|libnatpmp1,libnatpmp-dev|exe,dev,doc,nls||deps:yes #needed by transmission.
 yes|libnfnetlink|libnfnetlink0|exe,devdoc,nls||deps:yes
 yes|libnetfilter-conntrack|libnetfilter-conntrack3|exe,dev,doc,nls||deps:yes
 yes|libnghttp2|libnghttp2-14|exe,dev,doc,nls||deps:yes #stretch: needed by curl, cmake, etc...
@@ -369,7 +379,7 @@ no|libpaper|libpaper1,libpaper-dev,libpaper-utils|exe,dev,doc,nls
 no|libpcap|libpcap0.8,libpcap0.8-dev|exe,dev,doc,nls||deps:yes
 yes|libpciaccess|libpciaccess0,libpciaccess-dev|exe,dev,doc,nls||deps:yes
 no|libpcsclite|libpcsclite1,libpcsclite-dev|exe,dev,doc,nls||deps:yes
-yes|libpipeline|libpipeline1,libpipeline-dev|exe,dev,doc,nls| #needed by usb-modeswitch
+no|libpipeline|libpipeline1,libpipeline-dev|exe,dev,doc,nls| #needed by usb-modeswitch
 yes|libpng|libpng16-16,libpng-dev|exe,dev,doc,nls||deps:yes
 no|libpng12||exe,dev>null,doc,nls #from precise..
 yes|libpsl|libpsl5|exe,dev,doc,nls||deps:yes #stretch: wget dep
@@ -419,12 +429,12 @@ no|libva|libva2,libva-drm2,libva-x11-2,vainfo,va-driver-all|exe,dev,doc,nls||dep
 no|libvdpau|libvdpau1,mesa-vdpau-drivers,vdpau-va-driver,libvdpau-dev|exe,dev,doc,nls #needed by mplayer. no, this has another big dep: Failed to open VDPAU backend libvdpau_nvidia.so missing.
 yes|libvorbis|libvorbis0a,libvorbisenc2|exe,dev,doc,nls||deps:yes
 no|libvpx|libvpx7|exe,dev,doc,nls||deps:yes #needed by mplayer.
-no|libvulkan|libvulkan1,libvulkan-dev|exe,dev,doc,nls||deps:yes
+yes|libvulkan|libvulkan1,libvulkan-dev|exe,dev,doc,nls||deps:yes
 no|libwmf|libwmf0.2-7,libwmf-dev|exe,dev,doc,nls
 no|libwpg|libwpg-0.3-3|exe,dev>null,doc,nls
 no|libwpd|libwpd-0.10-10,libwpd-dev|exe,dev,doc,nls
 no|libxatracker2|libxatracker2,libxatracker-dev|exe,dev,doc,nls
-yes|libxcb_base|libxcb1,libxcb1-dev,libxcb-dri2-0,libxcb-dri3-0,libxcb-dri3-dev,libxcb-present0,libxcb-present-dev,libxcb-render0,libxcb-render0-dev,libxcb-shape0,libxcb-shape0-dev,libxcb-shm0,libxcb-shm0-dev,libxcb-sync1,libxcb-sync-dev,libxcb-glx0,libxcb-glx0-dev,libxcb-xfixes0,libxcb-xfixes0-dev|exe,dev,doc,nls||deps:yes
+yes|libxcb_base|libxcb1,libxcb1-dev,libxcb-dri2-0,libxcb-dri3-0,libxcb-dri3-dev,libxcb-xkb1,libxcb-xkb-dev,libxcb-present0,libxcb-present-dev,libxcb-render0,libxcb-render0-dev,libxcb-shape0,libxcb-shape0-dev,libxcb-shm0,libxcb-shm0-dev,libxcb-sync1,libxcb-sync-dev,libxcb-glx0,libxcb-glx0-dev,libxcb-xfixes0,libxcb-xfixes0-dev,libxcb-damage0,libxcb-damage0-dev|exe,dev,doc,nls||deps:yes
 no|libz3|libz3-4|exe,dev,doc,nls||deps:yes
 no|libzip|libzip4,libzip-dev|exe,dev,doc,nls
 yes|xcb-util|libxcb-util1,libxcb-util-dev|exe,dev,doc,nls||deps:yes
@@ -462,11 +472,12 @@ yes|mesa|libgbm1,libgbm-dev,libegl1,libegl-mesa0,libwayland-egl1,libegl1-mesa-de
 yes|meson|meson|exe>dev,dev,doc,nls||deps:yes
 no|mhash|libmhash2,libmhash-dev|exe,dev,doc,nls
 no|mhwaveedit|mhwaveedit|exe,dev>null,doc,nls
+no|miniupnpc|libminiupnpc*,libminiupnpc-dev|exe,dev,doc,nls #needed by transmission.
 no|mirdir||exe
 yes|mpclib3|libmpc3|exe,dev,doc,nls||deps:yes #needed by gcc.
 no|mpeg2dec|libmpeg2-4,libmpeg2-4-dev|exe,dev,doc,nls #needed by mplayer.
 no|mplayer|mplayer,libdv4,liblirc-client0,libvorbisidec1|exe,dev,doc,nls
-yes|mpv-deps|libavcodec-dev,libavfilter-dev,libass-dev,liblua5.2-dev,libdvdnav-dev,libdvdread-dev,libbluray-dev,libxss-dev,libxpresent-dev,libxv-dev|exe,dev,doc,nls||deps:yes
+yes|mpv-deps|libavcodec-dev,libavfilter-dev,libass-dev,libxss-dev,libxpresent-dev,libxv-dev|exe,dev,doc,nls||deps:yes
 no|mplayer_samba|libsmbclient,libldb1,liblmdb0,libtalloc2,libtevent0,libwbclient0,python-talloc,samba-libs|exe,dev,doc,nls
 no|ms-sys||exe
 yes|mtdev|libmtdev1,libmtdev-dev|exe,dev,doc,nls||deps:yes #needed by synaptics_drv.so in xorg.
@@ -567,8 +578,9 @@ no|puppy_icon_theme||exe #gtk theme
 no|puppy-podcast-grabber||exe
 no|pure-ftpd||exe
 no|pwsget||exe
-yes|python|python-is-python3,python3|exe,dev,doc,nls||deps:yes
-yes|python3-pkg-resources|python3-pkg-resources|exe,dev,doc,nls||deps:yes # dependency of gdebi
+yes|python|python-is-python3,python3,python3-minimal,libpython3-stdlib,libpython3.10,libpython3.10-stdlib,libpython3.10-minimal,python3-setuptools,python3-wheel,python3-pkg-resources,python3-distutils,python3-lib2to3|exe,dev,doc,nls||deps:yes
+yes|python3-pip|python3-pip|exe>dev,dev,doc,nls||deps:yes
+yes|python3-venv|python3-venv|exe>dev,dev,doc,nls||deps:yes
 no|python-libxml2|python2-libxml2|exe,dev,doc,nls #121022 moved from devx to main f.s.
 no|python-dev|libpython3-dev,python3-dev|exe,dev,doc,nls||deps:yes
 no|qpdf|libqpdf21,libqpdf-dev|exe,dev,doc,nls #needed by cups.
@@ -582,7 +594,7 @@ no|redshift|redshift|exe,dev,doc,nls
 no|retrovol||exe
 yes|rman|rman|exe>dev,dev,doc,nls||deps:yes
 no|rox-filer||exe
-yes|rsync|rsync|exe,dev||deps:yes
+yes|rsync|rsync|exe>dev,dev||deps:yes
 no|rtmpdump|rtmpdump,librtmp1,librtmp-dev,flvstreamer|exe,dev,doc,nls
 no|rxvt-unicode||exe,dev>null,doc,nls
 no|sane-backends||exe,dev,doc,nls
@@ -611,13 +623,13 @@ no|taglib|libtag1v5,libtag1-dev,libtag1v5-vanilla|exe,dev,doc,nls #needed by lot
 yes|tar|tar|exe,dev>null,doc,nls||deps:yes
 no|tas||exe,nls
 no|tbb|libtbb2|exe,dev>null,doc,nls #needed by libopencv-core. have left off the dev.
-no|tcp-wrappers|libwrap0|exe,dev,doc,nls||deps:yes #needed by mplayer, skype
+yes|tcp-wrappers|libwrap0|exe,dev,doc,nls||deps:yes #needed by mplayer, skype
 yes|tdb|libtdb1|exe,dev,doc,nls||deps:yes #needed by mplayer and libcanberra.
 no|telepathy-glib|libtelepathy-glib0|exe,dev,doc,nls #needed by abiword. left out -dev lib.
 yes|texinfo|texinfo|exe>dev,dev,doc,nls||deps:yes
 no|tidy|libtidy5deb1,libtidy-dev|exe,dev,doc,nls #needed by abiword.
 yes|time|time|exe,dev>null,doc,nls||deps:yes
-yes|transmission-deps|libevent-dev,libnatpmp-dev,libminiupnpc-dev|exe,dev,doc,nls||deps:yes
+no|transmission|transmission-gtk,transmission-common|exe,dev,doc,nls
 no|tree|tree|exe,dev,doc,nls
 yes|udev|udev|exe,dev,doc,nls||deps:yes
 no|eudev||exe,dev #pet pkg: replaces udev and libudev
@@ -666,7 +678,7 @@ no|xlockmore||exe
 yes|xml-core|xml-core|exe>dev,dev,doc,nls||deps:yes
 yes|xorg_base_new|libglapi-mesa,libx11-xcb1,xfonts-utils,mesa-common-dev,libgl1,x11-xkb-utils,x11-xserver-utils,x11-utils,x11-apps,fontconfig,fontconfig-config,libfontconfig-dev,libdrm2,libdrm-common,libdrm-dev,libdrm-radeon1,libdrm-amdgpu1,libdrm-nouveau2,libdrm-intel1,libepoxy0,libepoxy-dev,libfontconfig1,libfontconfig1-dev,libfontenc1,libfontenc-dev,libgl-dev,libglu1-mesa,libglu1-mesa-dev,libice6,libice-dev,libsm6,libsm-dev,libunwind8,libunwind-dev,libx11-6,libx11-dev,libx11-data,libxau6,libxau-dev,libxaw7,libxcomposite1,libxcomposite-dev,libxcursor1,libxcursor-dev,libxdamage1,libxdamage-dev,libxdmcp6,libxdmcp-dev,libxext6,libxext-dev,libxfixes3,libxfixes-dev,libxfont2,libxfont-dev,libxft2,libxft-dev,libxi6,libxi-dev,libxinerama1,libxkbfile1,libxkbfile-dev,libxmu6,libxmu-dev,libxmuu1,libxpm4,libxpm-dev,libxrandr2,libxrandr-dev,libxrender1,libxrender-dev,libxt6,libxt-dev,libxtst6,libxtst-dev,libxv1,libxxf86dga1,libxxf86vm1,xkb-data,xinput,xbitmaps,xauth,x11-common|exe,dev,doc,nls||deps:yes
 yes|xorg_dri|libgl1-mesa-dri,mesa-utils,libsensors5|exe,dev,doc,nls||deps:yes
-yes|xournalpp-deps|libsndfile1-dev,portaudio19-dev,libzip-dev|exe,dev,doc,nls||deps:yes
+yes|xournalpp-deps|libsndfile1-dev,portaudio19-dev,libpoppler-glib-dev,libzip-dev|exe,dev,doc,nls||deps:yes
 no|xserver-xorg-video-vmware|xserver-xorg-video-vmware|exe>null,dev>null,doc>null,nls>null # needs libxatracker2
 yes|xserver_xorg|xserver-xorg,xserver-xorg-video-all,xserver-xorg-input-all,xserver-xorg-input-wacom,xserver-xorg-video-intel,xserver-xorg-video-qxl,xinit|exe,dev,doc,nls||deps:yes
 no|xsane||exe

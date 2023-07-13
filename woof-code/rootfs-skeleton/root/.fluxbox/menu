@@ -1,0 +1,135 @@
+
+ [begin] (Fluxbox)
+ [submenu] (Desktop) </usr/local/lib/X11/pixmaps/x48.png> 
+     [exec] (Desktop settings) {pdesktop} </usr/share/pixmaps/puppy/windows.svg>
+     [exec] (Font manager) {fontmanager} </usr/share/pixmaps/puppy/font.svg>
+     [exec] (Wallpaper Setter) {wallpaper} </usr/share/pixmaps/puppy/wallpaper.svg>
+     [exec] (Xlock setup) {/usr/local/apps/Xlock/AppRun -configure} </usr/share/pixmaps/puppy/screen_lock.svg>
+   [separator]
+     [exec] (Chooselocale) {chooselocale} </usr/share/pixmaps/puppy/country_language.svg>
+     [exec] (Psync) {psync} </usr/share/pixmaps/puppy/clock.svg>
+     [exec] (Screensaver setup) {pupx} </usr/share/pixmaps/puppy/screen_resolution.svg>
+     [exec] (Set date and time) {set-time-for-puppy} </usr/share/pixmaps/puppy/date_time.svg>
+     [exec] (Set timezone) {timezone-set} </usr/share/pixmaps/puppy/country_timezone.svg>
+   [separator]
+     [exec] (Font viewer) {gfontsel} </usr/share/pixmaps/puppy/font.svg>
+ [end]
+ [submenu] (System) </usr/local/lib/X11/pixmaps/pc48.png> 
+     [exec] (Bluetooth Manager) {blueman-manager} </usr/share/icons/hicolor/128x128/apps/blueman.png>
+     [exec] (Boot manager) {bootmanager} </usr/share/pixmaps/puppy/startup.svg>
+     [exec] (IPInfo) {ipinfo} </usr/share/pixmaps/puppy/network.svg>
+     [exec] (Task Manager) {lxtask} </usr/share/icons/Puppy Standard/16/actions/execute.svg>
+   [separator]
+     [exec] (Event manager) {eventmanager} </usr/share/pixmaps/puppy/execute.svg>
+     [exec] (Htop) {rxvt -title 'Htop' -e sh -c 'htop'} </usr/share/pixmaps/htop.png>
+     [exec] (pSchedule) {/usr/local/bin/pschedule} </usr/share/pixmaps/puppy/clock_interval.svg>
+   [separator]
+     [exec] (Login manager) {loginmanager} </usr/share/pixmaps/puppy/user_login.svg>
+     [exec] (Xlock) {puplock -locknow} </usr/share/pixmaps/puppy/screen_lock.svg>
+ [end]
+ [submenu] (Setup) </usr/local/lib/X11/pixmaps/configuration48.png> 
+     [exec] (Dependency checker) {/usr/local/petget/check_deps_gui.sh} </usr/share/pixmaps/puppy/package_inspect.svg>
+     [exec] (GPkgdialog package manager) {gpkgdialog} </usr/share/pixmaps/Setup.svg>
+     [exec] (Package manager) {/usr/local/petget/pkg_chooser.sh} </usr/share/pixmaps/puppy/package_add.svg>
+     [exec] (Pkgdialog package manager) {rxvt -title 'Pkgdialog package manager' -e sh -c 'defaultterminal -e pkgdialog'} </usr/share/pixmaps/Setup.svg>
+     [exec] (Puppy setup) {wizardwizard} </usr/share/pixmaps/puppy/puppy_config.svg>
+     [exec] (QuickSetup) {quicksetup} </usr/share/pixmaps/puppy/puppy_config.svg>
+     [exec] (SFS-Load) {sfs_load} </usr/share/pixmaps/squashfs-image.png>
+     [exec] (Set default apps) {puppyapps} </usr/share/pixmaps/puppy/execute_inspect.svg>
+     [exec] (Xpkgdialog package manager) {Xpkgdialog} </usr/share/pixmaps/Setup.svg>
+   [separator]
+     [exec] (Menu manager) {menumanager} </usr/share/pixmaps/puppy/menu.svg>
+     [exec] (Mouse/Keyboard manager) {input-wizard} </usr/share/pixmaps/puppy/mouse_keyboard.svg>
+     [exec] (Screen/Graphics manager) {xorgwizard} </usr/share/pixmaps/puppy/graphics.svg>
+   [separator]
+     [exec] (Grub4Dos bootloader config) {grub4dosconfig} </usr/share/pixmaps/puppy/install.svg>
+     [exec] (Puppy installer) {/usr/sbin/dotpup1} </usr/share/pixmaps/puppy/power.svg>
+     [exec] (Remaster Puppy) {/usr/sbin/remasterpup2} </usr/share/pixmaps/puppy/puppy_remaster.svg>
+     [exec] (Remove builtin packages) {/usr/sbin/remove_builtin} </usr/share/pixmaps/puppy/package_remove.svg>
+ [end]
+   [separator]
+ [submenu] (Utility) </usr/local/lib/X11/pixmaps/utility48.png> 
+     [exec] (Xarchiver) {xarchiver} </usr/bin/xarchiver>
+     [exec] (Xdelta) {xdelta_gui} </usr/share/pixmaps/puppy/file_compare.svg>
+   [separator]
+     [exec] (MoManager) {momanager} </usr/share/pixmaps/puppy/country_language.svg>
+   [separator]
+     [exec] (Pudd) {Pudd} </usr/share/pixmaps/puppy/copy_disk.svg>
+     [exec] (Pupsave Backup) {pupsave-backup} </usr/share/pixmaps/puppy/copy_disk.svg>
+     [exec] (Resize personal storage) {resizepfile.sh} </usr/share/pixmaps/puppy/puppy_increase.svg>
+   [separator]
+     [exec] (Gexec) {gexec} </usr/share/pixmaps/puppy/execute.svg>
+     [exec] (LXTerminal) {lxterminal} </usr/share/pixmaps/puppy/terminal.svg>
+   [separator]
+     [exec] (Document Viewer) {evince} </usr/share/icons/hicolor/scalable/apps/org.gnome.Evince.svg>
+ [end]
+ [submenu] (Filesystem) </usr/local/lib/X11/pixmaps/folder48.png> 
+     [exec] (ROX-Filer) {rox} </usr/share/pixmaps/puppy/open.svg>
+   [separator]
+     [exec] (FileMnt) {filemnt -manager} </usr/share/pixmaps/puppy/cdrom.svg>
+     [exec] (Pmount) {pmount} </usr/share/pixmaps/puppy/harddisk.svg>
+   [separator]
+     [exec] (pFind) {pfind} </usr/share/pixmaps/puppy/find.svg>
+   [separator]
+     [exec] (Partview) {partview} </usr/share/pixmaps/puppy/partition.svg>
+ [end]
+ [submenu] (Graphic) </usr/local/lib/X11/pixmaps/paint48.png> 
+     [exec] (mtPaint) {mtpaint} </usr/share/pixmaps/mtpaint.png>
+   [separator]
+     [exec] (Image Viewer) {gpicview} </usr/bin/gpicview>
+   [separator]
+     [exec] (Gcolor2) {gcolor2} </usr/share/pixmaps/puppy/graphics.svg>
+ [end]
+ [submenu] (Document) </usr/local/lib/X11/pixmaps/word48.png> 
+     [exec] (Geany) {geany} </usr/bin/geany>
+     [exec] (Leafpad) {leafpad} </usr/bin/leafpad>
+ [end]
+ [submenu] (Business) </usr/local/lib/X11/pixmaps/spread48.png> 
+     [exec] (Galculator) {galculator} </usr/share/pixmaps/galculator.xpm>
+ [end]
+ [submenu] (Personal) </usr/local/lib/X11/pixmaps/date48.png> 
+     [exec] (Osmo) {osmo} </usr/bin/osmo>
+   [separator]
+     [exec] (pClock) {pclock} </usr/share/pixmaps/puppy/clock.svg>
+     [exec] (pTiming) {ptiming} </usr/share/pixmaps/puppy/clock_stopwatch.svg>
+ [end]
+ [submenu] (Network) </usr/local/lib/X11/pixmaps/connect48.png> 
+     [exec] (Firewall Setup) {firewall_ng} </usr/share/pixmaps/puppy/firewall.svg>
+ [end]
+ [submenu] (Internet) </usr/local/lib/X11/pixmaps/www48.png> 
+     [exec] (Firefox) {firefox} </usr/bin/firefox>
+     [exec] (Palemoon) {palemoon} </usr/bin/palemoon>
+   [separator]
+     [exec] (Transmission) {transmission-gtk} </usr/share/transmission>
+   [separator]
+     [exec] (Pup-Advert-Blocker) {pup-advert-blocker} </usr/share/pixmaps/puppy/dialog_stop.svg>
+ [end]
+ [submenu] (Multimedia) </usr/local/lib/X11/pixmaps/multimedia48.png> 
+     [exec] (PulseAudio Volume Control) {pavucontrol} </usr/share/pixmaps/puppy/sound_mixer.svg>
+ [end]
+   [separator]
+     [exec] (Help) {/usr/sbin/puppyhelp} </usr/local/lib/X11/pixmaps/help48.png>
+     [exec] (Leave) {/usr/sbin/logout_gui} </usr/local/lib/X11/pixmaps/shutdown48.png>
+[submenu] (Fluxbox menu)
+      [config] (Configure)
+[submenu] (System Styles) {Choose a style...}
+      [stylesdir] (/usr/share/fluxbox/styles)
+[end]
+[submenu] (User Styles) {Choose a style...}
+      [stylesdir] (~/.fluxbox/styles)
+[end]
+      [workspaces] (Workspace List) 
+[submenu] (Tools)
+      [exec] (Window name) {xprop WM_CLASS|cut -d " -f 2|gxmessage -file - -center} 
+      [exec] (Run) {fbrun} 
+      [exec] (Regen Menu) {cd /root/Startup/ \  jwmtoflux} 
+[end]
+      [exec] (Lock screen) {xlock}
+      [commanddialog] (Fluxbox Command) 
+      [reconfig] (Reload config) 
+      [restart] (Restart) 
+      [exec] (About) {(fluxbox -v; fluxbox -info | sed 1d) | gxmessage -file - -center} 
+      [separator]
+ [end]
+ [endencoding]
+ [end]
