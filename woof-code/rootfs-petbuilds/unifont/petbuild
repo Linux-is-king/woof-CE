@@ -1,0 +1,8 @@
+download() {
+    [ -f unifont-15.0.01.pcf.gz ] || wget -t 3 -T 60 https://unifoundry.com/pub/unifont/unifont-15.0.01/font-builds/unifont-15.0.01.pcf.gz
+}
+
+build() {
+mkdir -pv /usr/share/fonts/unifont &&
+gunzip -c ../unifont-15.0.01.pcf.gz > /usr/share/fonts/unifont/unifont.pcf
+}
