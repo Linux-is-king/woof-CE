@@ -1,1 +1,0 @@
-timeout 600 'sh -c "wlopm --off \*"' resume 'sh -c "wlopm --on \*"'
